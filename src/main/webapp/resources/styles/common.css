@@ -1,0 +1,31 @@
+html {
+    font-size: 14px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+/* to avoid an unnecessary space in place of empty p:message */
+body .ui-message:empty {
+    padding: unset;
+}
+
+/* adjust p:message to form field */
+/*body .ui-widget+.ui-message {*/
+body .ui-widget+.ui-message,
+body .ui-inputfield+.ui-message,
+body .ui-password+.ui-message,
+body .ui-autocomplete+.ui-message,
+body .ui-inputnumber+.ui-message {
+    margin: .25rem 0;
+}
+body .ui-password.ui-input-icon-right {
+    display: inline-block;
+}
+
+/* don't want modal window to have initial horizontal scroll */
+body .ui-dialog.ui-resizable .ui-dialog-content {
+    width: unset !important;
+}
+
+.ui-growl {
+    top: 1.5rem !important;
+}

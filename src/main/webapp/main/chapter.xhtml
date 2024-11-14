@@ -1,0 +1,264 @@
+<ui:composition template="/WEB-INF/templates/layout.xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:c="jakarta.tags.core">
+    <ui:param name="title" value="Chapters"/>
+    <ui:define name="styles">
+        <h:outputStylesheet name="styles/crud.css"/>
+    </ui:define>
+    <ui:define name="content">
+        <div class="crud-table">
+            <h:form id="form">
+                <p:toolbar>
+                    <p:toolbarGroup>
+                        <p:commandButton value="New" icon="pi pi-plus"
+                                         styleClass="ui-button-success mr-2"
+                                         actionListener="#{chaptersView.openNew}"
+                                         update="@widgetVar(manageChapterDialog)"
+                                         oncomplete="PF('manageChapterDialog').show()">
+                            <p:resetInput target=":dialogs:manage-chapter-content"/>
+                        </p:commandButton>
+                    </p:toolbarGroup>
+                </p:toolbar>
+
+                <p:poll listener="#{chaptersView.refreshData}" update="@next" interval="5"/>
+                <!--Not using selectionRowMode="add" so that the edit form opens correctly on dbclick-->
+                <!--<p:dataTable ... selection="#{chaptersView.selectedChapter}" selectionRowMode="new" ...-->
+                <p:dataTable value="#{chaptersView.chapters}" var="chapter" widgetVar="dtChapters"
+                             styleClass="crud-objects-table"
+                             rowKey="#{chapter.id}"
+                             filteredValue="#{chaptersView.filteredChapters}" filterBy="#{chaptersView.filterBy}"
+                             emptyMessage="No chapters found with given criteria."
+                             sortMode="single"
+                             paginator="true" paginatorPosition="bottom"
+                             rows="10" rowsPerPageTemplate="10,25,50,100"
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records">
+                    <f:facet name="header">
+                        <div class="crud-objects-table-header">
+                            <span style="font-weight: bold">CHAPTERS</span>
+                            <span class="filter-container ui-input-icon-left"> <i class="pi pi-search"/>
+                                <p:inputText id="globalFilter" onkeyup="PF('dtChapters').filter()" placeholder="Search"/>
+                            </span>
+                        </div>
+                    </f:facet>
+
+                    <!--<p:column selectionMode="single" exportable="false"/>-->
+                    <p:column/>
+
+                    <p:column headerText="Id" sortOrder="desc" sortBy="#{chapter.id}" filterBy="#{chapter.id}" filterMatchMode="exact" width="80">
+                        <h:outputText value="#{chapter.id}"/>
+                    </p:column>
+                    <p:column headerText="Name" sortBy="#{chapter.name}" filterBy="#{chapter.name}" filterMatchMode="contains">
+                        <h:outputText value="#{chapter.name}"/>
+                    </p:column>
+                    <p:column headerText="Parent Legion" sortBy="#{chapter.parentLegion}" filterBy="#{chapter.parentLegion}" filterMatchMode="contains">
+                        <h:outputText value="#{chapter.parentLegion}"/>
+                    </p:column>
+                    <p:column headerText="World" sortBy="#{chapter.world}" filterBy="#{chapter.world}" filterMatchMode="contains">
+                        <h:outputText value="#{chapter.world}"/>
+                    </p:column>
+                    <p:column headerText="Marines Count" sortBy="#{chapter.marinesCount}" filterBy="#{chapter.marinesCount}" filterMatchMode="exact">
+                        <h:outputText value="#{chapter.marinesCount}"/>
+                    </p:column>
+
+                    <p:column exportable="false" ariaHeaderText="Actions">
+                        <p:commandButton icon="pi pi-#{chapter.isEditableByUser(chaptersView.user) ? 'pencil' : 'search'}"
+                                         styleClass="edit-button rounded-button mr-2 ui-button-#{chapter.isEditableByUser(chaptersView.user) ? 'success' : 'info'}"
+                                         update="@widgetVar(manageChapterDialog)" process="@this"
+                                         oncomplete="PF('manageChapterDialog').show()">
+                            <f:setPropertyActionListener value="#{chapter}" target="#{chaptersView.selectedChapter}"/>
+                            <p:resetInput target=":dialogs:manage-chapter-content"/>
+                        </p:commandButton>
+                        <p:commandButton icon="pi pi-trash" rendered="#{chapter.isDeletableByUser(chaptersView.user)}"
+                                         styleClass="ui-button-warning rounded-button"
+                                         update="@widgetVar(deleteChapterDialog)" process="@this"
+                                         oncomplete="PF('deleteChapterDialog').show()">
+                            <f:setPropertyActionListener value="#{chapter}" target="#{chaptersView.selectedChapter}"/>
+                            <f:setPropertyActionListener value="#{chaptersView.getRefreshedRelatedSpaceMarinesData(chapter)}" target="#{chaptersView.relatedSpaceMarines}"/>
+                        </p:commandButton>
+                    </p:column>
+
+                    <!--<p:ajax event="rowDblselect"-->
+                    <!--        update="@widgetVar(manageChapterDialog)"-->
+                    <!--        onsuccess="PF('manageChapterDialog').show()"-->
+                    <!--        global="false">-->
+                    <!--    <p:resetInput target=":dialogs:manage-chapter-content"/>-->
+                    <!--</p:ajax>-->
+                </p:dataTable>
+            </h:form>
+
+            <h:form id="dialogs">
+                <p:dialog widgetVar="manageChapterDialog" header="Chapter Details"
+                          modal="true" showEffect="fade" responsive="true" fitViewport="true">
+                    <p:outputPanel id="manage-chapter-content" styleClass="ui-fluid w-30rem">
+                        <p:outputPanel rendered="#{not empty chaptersView.selectedChapter}">
+                            <p:tabView>
+                                <p:tab title="Details">
+                                    <div class="field">
+                                        <p:outputLabel value="Name" for="@next"/>
+                                        <p:inputText value="#{chaptersView.selectedChapter.name}"
+                                                     readonly="#{not chaptersView.selectedChapterEditable}">
+                                            <p:clientValidator event="keyup"/>
+                                        </p:inputText>
+                                        <p:message for="@previous"/>
+                                    </div>
+                                    <div class="formgrid grid">
+                                        <div class="field col">
+                                            <p:outputLabel value="Parent legion" for="@next"/>
+                                            <p:inputText value="#{chaptersView.selectedChapter.parentLegion}"
+                                                         readonly="#{not chaptersView.selectedChapterEditable}">
+                                                <p:clientValidator event="keyup"/>
+                                            </p:inputText>
+                                            <p:message for="@previous"/>
+                                        </div>
+                                        <div class="field col">
+                                            <p:outputLabel value="World" for="@next"/>
+                                            <p:inputText value="#{chaptersView.selectedChapter.world}"
+                                                         readonly="#{not chaptersView.selectedChapterEditable}">
+                                                <p:clientValidator event="keyup"/>
+                                            </p:inputText>
+                                            <p:message for="@previous"/>
+                                        </div>
+                                    </div>
+                                    <div class="field">
+                                        <p:outputLabel value="Marines count" for="@next"/>
+                                        <p:inputNumber value="#{chaptersView.selectedChapter.marinesCount}"
+                                                       readonly="#{not chaptersView.selectedChapterEditable}">
+                                            <p:clientValidator event="keyup"/>
+                                        </p:inputNumber>
+                                        <p:message for="@previous"/>
+                                    </div>
+                                    <div class="field">
+                                        <p:outputLabel value="Edit allowed (can the admin remove)" for="@next"/>
+                                        <p:selectBooleanCheckbox value="#{chaptersView.selectedChapter.editAllowed}"
+                                                                 styleClass="w-full" disabled="#{not chaptersView.selectedChapterCreatedByUser}"/>
+                                    </div>
+                                    <div class="formgrid grid">
+                                        <div class="field col">
+                                            <p:outputLabel value="Created time" for="@next"/>
+                                            <p:calendar value="#{chaptersView.selectedChapter.createdTime.toLocalDateTime()}" pattern="dd.MM.yyyy HH:mm"
+                                                        readonly="true" disabled="true"/>
+                                        </div>
+                                        <div class="field col">
+                                            <p:outputLabel value="Updated time" for="@next"/>
+                                            <p:calendar value="#{chaptersView.selectedChapter.updatedTime.toLocalDateTime()}" pattern="dd.MM.yyyy HH:mm"
+                                                        readonly="true" disabled="true"/>
+                                        </div>
+                                    </div>
+                                    <div class="formgrid grid">
+                                        <div class="field col">
+                                            <p:outputLabel value="Created by" for="@next"/>
+                                            <p:inputText value="#{chaptersView.selectedChapter.createdBy}"
+                                                         readonly="true" disabled="true"/>
+                                        </div>
+                                        <div class="field col">
+                                            <p:outputLabel value="Updated by" for="@next"/>
+                                            <p:inputText value="#{chaptersView.selectedChapter.updatedBy}"
+                                                         readonly="true" disabled="true"/>
+                                        </div>
+                                    </div>
+                                </p:tab>
+                                <p:tab title="Change History">
+                                    <p:dataTable var="history" value="#{chaptersView.selectedChapter.changeHistory}" sortMode="single">
+                                        <p:column headerText="Changed time" sortBy="#{history.id}" sortOrder="desc">
+                                            <h:outputText value="#{history.changeTime}">
+                                                <f:convertDateTime type="zonedDateTime" pattern="dd.MM.yyyy HH:mm"/>
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column headerText="Changed by">
+                                            <h:outputText value="#{history.changedBy}"/>
+                                        </p:column>
+                                    </p:dataTable>
+                                </p:tab>
+                            </p:tabView>
+                        </p:outputPanel>
+                    </p:outputPanel>
+                    <f:facet name="footer">
+                        <p:commandButton value="Save" icon="pi pi-check"
+                                         actionListener="#{chaptersView.saveChapter}"
+                                         update="manage-chapter-content" process="manage-chapter-content @this"
+                                         rendered="#{chaptersView.selectedChapterEditable}"/>
+                        <p:commandButton value="Cancel" icon="pi pi-times"
+                                         type="button" styleClass="ui-button-secondary"
+                                         onclick="PF('manageChapterDialog').hide()"
+                                         rendered="#{chaptersView.selectedChapterEditable}"/>
+                    </f:facet>
+                </p:dialog>
+
+                <p:dialog widgetVar="deleteChapterDialog" header="Delete the chapter?"
+                          modal="true" showEffect="fade" responsive="true" fitViewport="true">
+                    <p:outputPanel styleClass="ui-fluid" style="width: 50rem" rendered="#{not empty chaptersView.selectedChapter}">
+<!--                    <p:outputPanel rendered="#{not empty chaptersView.selectedChapter}">-->
+                        Before deleting a chapter, change the chapter of the associated space marines.
+                        <p:dataTable value="#{chaptersView.relatedSpaceMarines}" var="spaceMarine" id="related-space-marines"
+                                     editable="true" rowKey="#{spaceMarine.id}"
+                                     emptyMessage="No related space marines found.">
+                            <p:ajax event="rowEdit" listener="#{chaptersView.onRelatedSpaceMarineRowEdit}"/>
+                            <f:facet name="header">
+                                Related space marines
+                            </f:facet>
+                            <p:column headerText="Id" width="80">
+                                <h:outputText value="#{spaceMarine.id}"/>
+                            </p:column>
+                            <p:column headerText="Name" width="200">
+                                <h:outputText value="#{spaceMarine.name}"/>
+                            </p:column>
+                            <p:column headerText="Chapter">
+                                <p:cellEditor>
+                                    <f:facet name="output">
+                                        <h:outputText value="#{spaceMarine.chapter}"/>
+                                    </f:facet>
+                                    <f:facet name="input">
+                                        <p:autoComplete value="#{spaceMarine.chapter}" var="chapterReplacement"
+                                                        itemLabel="#{chapterReplacement.name}" itemValue="#{chapterReplacement}" converter="chapterConverter"
+                                                        completeMethod="#{chaptersView.suggestChapterReplacements}"
+                                                        widgetVar="chapterReplacementField" onclick="PF('chapterReplacementField').search(PF('chapterReplacementField').input.val());"
+                                                        forceSelection="true" maxResults="5" moreText="..." scrollHeight="200" immediate="true">
+                                            <p:clientValidator event="blur"/>
+                                            <p:clientValidator event="keyup"/>
+                                            <p:clientValidator event="change"/>
+                                        </p:autoComplete>
+                                        <!--<p:message for="@previous"/>-->
+                                    </f:facet>
+                                </p:cellEditor>
+                            </p:column>
+                            <p:column styleClass="w-6rem">
+                                <p:rowEditor rendered="#{spaceMarine.isEditableByUser(chaptersView.user)}"/>
+                            </p:column>
+                        </p:dataTable>
+                        <p:staticMessage summary="OOPS" detail="There are some related space marines, that you cannot edit - so the chapter cannot be deleted."
+                                         severity="error" styleClass="w-full"
+                                         rendered="#{chaptersView.checkSelectedChapterHasUneditableRelatedSpaceMarines}"/>
+                    </p:outputPanel>
+                    <f:facet name="footer">
+                        <p:commandButton value="Delete" icon="pi pi-times" styleClass="ui-button-danger" id="delete-chapter-button"
+                                         actionListener="#{chaptersView.deleteSelectedChapter}"
+                                         rendered="#{not chaptersView.checkSelectedChapterHasUneditableRelatedSpaceMarines}"
+                                         disabled="#{not empty chaptersView.relatedSpaceMarines}"
+                                         process="@this"
+                                         oncomplete="PF('deleteChapterDialog').hide()"/>
+                    </f:facet>
+                </p:dialog>
+
+                <!--<p:confirmDialog widgetVar="deleteChapterDialog" header="Confirm" message="Delete the chapter?"-->
+                <!--                 severity="warn" showEffect="fade" width="300">-->
+                <!--    <p:commandButton value="Yes" icon="pi pi-check"-->
+                <!--                     actionListener="#{chaptersView.deleteSelectedChapter}"-->
+                <!--                     process="@this"-->
+                <!--                     oncomplete="PF('deleteChapterDialog').hide()"/>-->
+                <!--    <p:commandButton value="No" icon="pi pi-times"-->
+                <!--                     type="button" styleClass="ui-button-secondary"-->
+                <!--                     onclick="PF('deleteChapterDialog').hide()"/>-->
+                <!--</p:confirmDialog>-->
+
+                <p:confirmDialog global="true" showEffect="fade" width="300">
+                    <p:commandButton value="Yes" icon="pi pi-check" type="button" styleClass="ui-confirmdialog-yes"/>
+                    <p:commandButton value="No" icon="pi pi-times" type="button" styleClass="ui-confirmdialog-no ui-button-secondary"/>
+                </p:confirmDialog>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

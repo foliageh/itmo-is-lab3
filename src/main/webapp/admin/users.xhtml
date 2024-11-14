@@ -1,0 +1,62 @@
+<ui:composition template="/WEB-INF/templates/layout.xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <ui:param name="title" value="Users"/>
+    <ui:define name="styles">
+        <h:outputStylesheet name="styles/crud.css"/>
+    </ui:define>
+    <ui:define name="content">
+        <div class="crud-table">
+            <h:form id="form">
+                <p:poll listener="#{usersView.refreshData}" update="@next" interval="5"/>
+                <p:dataTable id="dt-crud-objects" styleClass="crud-objects-table"
+                             value="#{usersView.users}" var="user" widgetVar="dtUsers"
+                             rowKey="#{user.id}"
+                             filteredValue="#{usersView.filteredUsers}" filterBy="#{usersView.filterBy}"
+                             emptyMessage="No users found with given criteria."
+                             sortMode="single"
+                             paginator="true" paginatorPosition="bottom"
+                             rows="10" rowsPerPageTemplate="10,25,50,100"
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records">
+                    <f:facet name="header">
+                        <div class="crud-objects-table-header">
+                            <span style="font-weight: bold">USERS</span>
+                            <span class="filter-container ui-input-icon-left"> <i class="pi pi-search"/>
+                                <p:inputText id="globalFilter" onkeyup="PF('dtUsers').filter()" placeholder="Search"/>
+                            </span>
+                        </div>
+                    </f:facet>
+
+                    <p:column/>
+
+                    <p:column headerText="Id" sortOrder="desc" sortBy="#{user.id}" filterBy="#{user.id}" filterMatchMode="exact" width="80">
+                        <h:outputText value="#{user.id}"/>
+                    </p:column>
+                    <p:column headerText="Username" sortBy="#{user.username}" filterBy="#{user.username}" filterMatchMode="contains">
+                        <h:outputText value="#{user.username}"/>
+                    </p:column>
+                    <p:column field="role" headerText="Role" filterMatchMode="exact">
+                        <f:facet name="filter">
+                            <p:selectOneMenu onchange="PF('dtUsers').filter()" styleClass="custom-filter">
+                                <f:selectItem itemLabel="All" itemValue="#{null}" noSelectionOption="true"/>
+                                <f:selectItems value="#{usersView.roles}"/>
+                            </p:selectOneMenu>
+                        </f:facet>
+                        <h:outputText styleClass="crud-object-badge user-role-#{user.role.name().toLowerCase().replace('_', '-')}"
+                                      value="#{user.role.toString()}"/>
+                    </p:column>
+
+                    <p:column exportable="false" ariaHeaderText="Actions">
+                        <p:commandButton value="Confirm registration" icon="pi pi-check" rendered="#{user.new}"
+                                         styleClass="edit-button rounded-button ui-button-success mr-2"
+                                         actionListener="#{usersView.confirmUserRegistration(user)}"
+                                         process="@this"/>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

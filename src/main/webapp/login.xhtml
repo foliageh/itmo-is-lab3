@@ -1,0 +1,40 @@
+<ui:composition template="/WEB-INF/templates/layout.xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <ui:param name="title" value="Log In"/>
+    <ui:define name="content">
+        <div class="flex flex-column align-items-center">
+            <h1>Log In</h1>
+            <h:form id="login">
+                <div class="flex">
+                    <div class="ui-fluid w-20rem">
+                        <div class="field">
+                            <p:outputLabel value="Username" for="@next"/>
+                            <p:inputText value="#{login.user.username}">
+                                <p:clientValidator event="keyup"/>
+                            </p:inputText>
+                            <p:message for="@previous"/>
+                        </div>
+                        <div class="field">
+                            <p:outputLabel value="Password" for="@next"/>
+                            <p:password value="#{login.user.password}" toggleMask="true" redisplay="true">
+                                <p:clientValidator event="keyup"/>
+                            </p:password>
+                            <!--<p:inputText value="#{login.user.password}" type="password">-->
+                            <!--    <f:ajax event="keyup" render="@this @next"/>-->
+                            <!--</p:inputText>-->
+                            <p:message for="@previous"/>
+                        </div>
+                        <p:commandButton value="Login" update="@form" ajax="false" action="#{login.submit}" />
+                        <div class="text-center mt-2">
+                            <span>Don't have an account?</span>
+                            <p:link outcome="/register" value="Register" styleClass="ml-1"/>
+                        </div>
+                    </div>
+                </div>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

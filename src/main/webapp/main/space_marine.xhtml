@@ -1,0 +1,270 @@
+<ui:composition template="/WEB-INF/templates/layout.xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <ui:param name="title" value="Space Marines"/>
+    <ui:define name="styles">
+        <h:outputStylesheet name="styles/crud.css"/>
+    </ui:define>
+    <ui:define name="content">
+        <div class="crud-table">
+            <h:form id="form">
+                <p:toolbar>
+                    <p:toolbarGroup>
+                        <p:commandButton value="New" icon="pi pi-plus"
+                                         styleClass="ui-button-success mr-2"
+                                         actionListener="#{spaceMarinesView.openNew}"
+                                         update="@widgetVar(manageSpaceMarineDialog)"
+                                         oncomplete="PF('manageSpaceMarineDialog').show()">
+                            <p:resetInput target=":dialogs:manage-space-marine-content"/>
+                        </p:commandButton>
+                    </p:toolbarGroup>
+                </p:toolbar>
+
+                <p:poll listener="#{spaceMarinesView.refreshData}" update="@next" interval="5"/>
+                <p:dataTable value="#{spaceMarinesView.spaceMarines}" var="spaceMarine" widgetVar="dtSpaceMarines"
+                             styleClass="crud-objects-table"
+                             rowKey="#{spaceMarine.id}"
+                             filteredValue="#{spaceMarinesView.filteredSpaceMarines}" filterBy="#{spaceMarinesView.filterBy}"
+                             emptyMessage="No space marines found with given criteria."
+                             sortMode="single"
+                             paginator="true" paginatorPosition="bottom"
+                             rows="10" rowsPerPageTemplate="10,25,50,100"
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records">
+                    <f:facet name="header">
+                        <div class="crud-objects-table-header">
+                            <span style="font-weight: bold">SPACE MARINES</span>
+                            <span class="filter-container ui-input-icon-left"> <i class="pi pi-search"/>
+                                    <p:inputText id="globalFilter" onkeyup="PF('dtSpaceMarines').filter()" placeholder="Search"/>
+                            </span>
+                        </div>
+                    </f:facet>
+
+                    <p:column/>
+
+                    <p:column headerText="Id" sortOrder="desc" sortBy="#{spaceMarine.id}" filterBy="#{spaceMarine.id}" filterMatchMode="exact" width="80">
+                        <h:outputText value="#{spaceMarine.id}"/>
+                    </p:column>
+                    <p:column headerText="Name" sortBy="#{spaceMarine.name}" filterBy="#{spaceMarine.name}" filterMatchMode="contains">
+                        <h:outputText value="#{spaceMarine.name}"/>
+                    </p:column>
+                    <p:column headerText="Chapter" sortBy="#{spaceMarine.chapter}" filterBy="#{spaceMarine.chapter}" filterMatchMode="contains">
+                        <h:outputText value="#{spaceMarine.chapter}"/>
+                    </p:column>
+                    <p:column headerText="Coord X" sortBy="#{spaceMarine.coordinates.x}" filterBy="#{spaceMarine.coordinates.x}" filterMatchMode="contains" width="80">
+                        <h:outputText value="#{spaceMarine.coordinates.x}"/>
+                    </p:column>
+                    <p:column headerText="Coord Y" sortBy="#{spaceMarine.coordinates.y}" filterBy="#{spaceMarine.coordinates.y}" filterMatchMode="contains" width="80">
+                        <h:outputText value="#{spaceMarine.coordinates.y}"/>
+                    </p:column>
+                    <p:column headerText="Health" sortBy="#{spaceMarine.health}" filterBy="#{spaceMarine.health}" filterMatchMode="contains" width="70">
+                        <h:outputText value="#{spaceMarine.health}"/>
+                    </p:column>
+                    <p:column field="category" headerText="Category" filterMatchMode="exact">
+                        <f:facet name="filter">
+                            <p:selectOneMenu onchange="PF('dtSpaceMarines').filter()" styleClass="custom-filter">
+                                <f:selectItem itemLabel="All" itemValue="#{null}" noSelectionOption="true"/>
+                                <f:selectItems value="#{spaceMarinesView.categories}"/>
+                            </p:selectOneMenu>
+                        </f:facet>
+                        <h:outputText value="#{spaceMarine.category.toString()}"
+                                      styleClass="crud-object-badge category-#{spaceMarine.category.name().toLowerCase().replace('_', '-')}"/>
+                    </p:column>
+                    <p:column field="weapon" headerText="Weapon" filterMatchMode="exact">
+                        <f:facet name="filter">
+                            <p:selectOneMenu onchange="PF('dtSpaceMarines').filter()" styleClass="custom-filter">
+                                <f:selectItem itemLabel="All" itemValue="#{null}" noSelectionOption="true"/>
+                                <f:selectItems value="#{spaceMarinesView.weapons}"/>
+                            </p:selectOneMenu>
+                        </f:facet>
+                        <h:outputText value="#{spaceMarine.weapon.toString()}"
+                                      styleClass="crud-object-badge weapon-#{spaceMarine.weapon.name().toLowerCase().replace('_', '-')}"/>
+                    </p:column>
+                    <p:column field="loyal" headerText="Loyal" filterMatchMode="equals">
+                        <f:facet name="filter">
+                            <p:selectOneMenu onchange="PF('dtSpaceMarines').filter()" styleClass="custom-filter">
+                                <f:converter converterId="jakarta.faces.Boolean"/>
+                                <f:selectItem itemLabel="All" itemValue="#{null}" noSelectionOption="true"/>
+                                <f:selectItem itemLabel="Yes" itemValue="true"/>
+                                <f:selectItem itemLabel="No" itemValue="false"/>
+                            </p:selectOneMenu>
+                        </f:facet>
+                        <h:outputText value="#{spaceMarine.loyal ? 'Yes': 'No'}"/>
+                    </p:column>
+
+                    <p:column exportable="false" ariaHeaderText="Actions">
+                        <p:commandButton icon="pi pi-#{spaceMarine.isEditableByUser(spaceMarinesView.user) ? 'pencil' : 'search'}"
+                                         styleClass="edit-button rounded-button mr-2 ui-button-#{spaceMarine.isEditableByUser(spaceMarinesView.user) ? 'success' : 'info'}"
+                                         update="@widgetVar(manageSpaceMarineDialog)" process="@this"
+                                         oncomplete="PF('manageSpaceMarineDialog').show()">
+                            <f:setPropertyActionListener value="#{spaceMarine}" target="#{spaceMarinesView.selectedSpaceMarine}"/>
+                            <p:resetInput target=":dialogs:manage-space-marine-content"/>
+                        </p:commandButton>
+                        <p:commandButton icon="pi pi-trash" rendered="#{spaceMarine.isDeletableByUser(spaceMarinesView.user)}"
+                                         styleClass="ui-button-warning rounded-button"
+                                         process="@this"
+                                         oncomplete="PF('deleteSpaceMarineDialog').show()">
+                            <f:setPropertyActionListener value="#{spaceMarine}" target="#{spaceMarinesView.selectedSpaceMarine}"/>
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+
+            <h:form id="dialogs">
+                <p:dialog widgetVar="manageSpaceMarineDialog" header="Space Marine Details"
+                          modal="true" showEffect="fade" responsive="true" fitViewport="true">
+                    <p:outputPanel id="manage-space-marine-content" styleClass="ui-fluid" style="width: 36rem">
+                        <p:outputPanel rendered="#{not empty spaceMarinesView.selectedSpaceMarine}">
+                            <p:tabView>
+                                <p:tab title="Details">
+                                    <div class="formgrid grid">
+                                        <div class="field col-9">
+                                            <p:outputLabel value="Name" for="@next"/>
+                                            <p:inputText value="#{spaceMarinesView.selectedSpaceMarine.name}"
+                                                         readonly="#{not spaceMarinesView.selectedSpaceMarineEditable}">
+                                                <p:clientValidator event="keyup"/>
+                                            </p:inputText>
+                                            <p:message for="@previous"/>
+                                        </div>
+                                        <div class="field col-3">
+                                            <p:outputLabel value="Loyal" for="@next"/>
+                                            <p:selectBooleanCheckbox value="#{spaceMarinesView.selectedSpaceMarine.loyal}"
+                                                                     styleClass="w-full" readonly="#{not spaceMarinesView.selectedSpaceMarineEditable}"/>
+                                        </div>
+                                    </div>
+                                    <div class="formgrid grid">
+                                        <div class="field col-7">
+                                            <p:outputLabel value="Chapter" for="@next"/>
+                                            <p:autoComplete value="#{spaceMarinesView.selectedSpaceMarine.chapter}" var="chapter"
+                                                            itemLabel="#{chapter.name}" itemValue="#{chapter}" converter="chapterConverter"
+                                                            completeMethod="#{spaceMarinesView.suggestChapters}"
+                                                            widgetVar="chapterField" onclick="PF('chapterField').search(PF('chapterField').input.val());"
+                                                            forceSelection="true" maxResults="5" moreText="..." scrollHeight="200"
+                                                            readonly="#{not spaceMarinesView.selectedSpaceMarineEditable}">
+                                                <p:clientValidator event="blur"/>
+                                                <p:clientValidator event="keyup"/>
+                                                <p:clientValidator event="change"/>
+                                            </p:autoComplete>
+                                            <p:message for="@previous"/>
+                                        </div>
+                                        <div class="field col-5">
+                                            <p:outputLabel value="Health" for="@next"/>
+                                            <p:inputNumber value="#{spaceMarinesView.selectedSpaceMarine.health}"
+                                                           readonly="#{not spaceMarinesView.selectedSpaceMarineEditable}">
+                                                <p:clientValidator event="keyup"/>
+                                            </p:inputNumber>
+                                            <p:message for="@previous"/>
+                                        </div>
+                                    </div>
+                                    <div class="formgrid grid">
+                                        <div class="field col">
+                                            <p:outputLabel value="Category" for="@next"/>
+                                            <p:selectOneMenu value="#{spaceMarinesView.selectedSpaceMarine.category}">
+                                                <f:selectItems value="#{spaceMarinesView.categories}"/>
+                                            </p:selectOneMenu>
+                                        </div>
+                                        <div class="field col">
+                                            <p:outputLabel value="Weapon" for="@next"/>
+                                            <p:selectOneMenu value="#{spaceMarinesView.selectedSpaceMarine.weapon}">
+                                                <f:selectItems value="#{spaceMarinesView.weapons}"/>
+                                            </p:selectOneMenu>
+                                        </div>
+                                    </div>
+                                    <div class="formgrid grid">
+                                        <div class="field col">
+                                            <p:outputLabel value="Coordinate X" for="@next"/>
+                                            <p:inputNumber value="#{spaceMarinesView.selectedSpaceMarine.coordinates.x}"
+                                                           decimalSeparator="." decimalSeparatorAlternative=","
+                                                           readonly="#{not spaceMarinesView.selectedSpaceMarineEditable}">
+                                                <p:clientValidator event="keyup"/>
+                                            </p:inputNumber>
+                                            <p:message for="@previous"/>
+                                        </div>
+                                        <div class="field col">
+                                            <p:outputLabel value="Coordinate Y" for="@next"/>
+                                            <p:inputNumber value="#{spaceMarinesView.selectedSpaceMarine.coordinates.y}"
+                                                           decimalSeparator="." decimalSeparatorAlternative=","
+                                                           readonly="#{not spaceMarinesView.selectedSpaceMarineEditable}">
+                                                <p:clientValidator event="keyup"/>
+                                            </p:inputNumber>
+                                            <p:message for="@previous"/>
+                                        </div>
+                                    </div>
+                                    <div class="field">
+                                        <p:outputLabel value="Edit allowed (can the admin remove)" for="@next"/>
+                                        <p:selectBooleanCheckbox value="#{spaceMarinesView.selectedSpaceMarine.editAllowed}"
+                                                                 styleClass="w-full" disabled="#{not spaceMarinesView.selectedSpaceMarineCreatedByUser}"/>
+                                    </div>
+                                    <div class="formgrid grid">
+                                        <div class="field col">
+                                            <p:outputLabel value="Created time" for="@next"/>
+                                            <p:calendar value="#{spaceMarinesView.selectedSpaceMarine.createdTime.toLocalDateTime()}" pattern="dd.MM.yyyy HH:mm"
+                                                        readonly="true" disabled="true"/>
+                                        </div>
+                                        <div class="field col">
+                                            <p:outputLabel value="Updated time" for="@next"/>
+                                            <p:calendar value="#{spaceMarinesView.selectedSpaceMarine.updatedTime.toLocalDateTime()}" pattern="dd.MM.yyyy HH:mm"
+                                                        readonly="true" disabled="true"/>
+                                        </div>
+                                    </div>
+                                    <div class="formgrid grid">
+                                        <div class="field col">
+                                            <p:outputLabel value="Created by" for="@next"/>
+                                            <p:inputText value="#{spaceMarinesView.selectedSpaceMarine.createdBy}"
+                                                         readonly="true" disabled="true"/>
+                                        </div>
+                                        <div class="field col">
+                                            <p:outputLabel value="Updated by" for="@next"/>
+                                            <p:inputText value="#{spaceMarinesView.selectedSpaceMarine.updatedBy}"
+                                                         readonly="true" disabled="true"/>
+                                        </div>
+                                    </div>
+                                </p:tab>
+                                <p:tab title="Change History">
+                                    <p:dataTable var="history" value="#{spaceMarinesView.selectedSpaceMarine.changeHistory}" sortMode="single">
+                                        <p:column headerText="Changed time" sortBy="#{history.id}" sortOrder="desc">
+                                            <h:outputText value="#{history.changeTime}">
+                                                <f:convertDateTime type="zonedDateTime" pattern="dd.MM.yyyy HH:mm"/>
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column headerText="Changed by">
+                                            <h:outputText value="#{history.changedBy}"/>
+                                        </p:column>
+                                    </p:dataTable>
+                                </p:tab>
+                            </p:tabView>
+                        </p:outputPanel>
+                    </p:outputPanel>
+                    <f:facet name="footer">
+                        <p:commandButton value="Save" icon="pi pi-check"
+                                         actionListener="#{spaceMarinesView.saveSpaceMarine}"
+                                         update="manage-space-marine-content" process="manage-space-marine-content @this"
+                                         rendered="#{spaceMarinesView.selectedSpaceMarineEditable}"/>
+                        <p:commandButton value="Cancel" icon="pi pi-times"
+                                         type="button" styleClass="ui-button-secondary"
+                                         onclick="PF('manageSpaceMarineDialog').hide()"
+                                         rendered="#{spaceMarinesView.selectedSpaceMarineEditable}"/>
+                    </f:facet>
+                </p:dialog>
+
+                <p:confirmDialog widgetVar="deleteSpaceMarineDialog" header="Confirm" message="Delete the space marine?"
+                                 severity="warn" showEffect="fade" width="300">
+                    <p:commandButton value="Yes" icon="pi pi-check"
+                                     actionListener="#{spaceMarinesView.deleteSelectedSpaceMarine}"
+                                     process="@this"
+                                     oncomplete="PF('deleteSpaceMarineDialog').hide()"/>
+                    <p:commandButton value="No" icon="pi pi-times"
+                                     type="button" styleClass="ui-button-secondary"
+                                     onclick="PF('deleteSpaceMarineDialog').hide()"/>
+                </p:confirmDialog>
+
+                <p:confirmDialog global="true" showEffect="fade" width="300">
+                    <p:commandButton value="Yes" icon="pi pi-check" type="button" styleClass="ui-confirmdialog-yes"/>
+                    <p:commandButton value="No" icon="pi pi-times" type="button" styleClass="ui-confirmdialog-no ui-button-secondary"/>
+                </p:confirmDialog>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

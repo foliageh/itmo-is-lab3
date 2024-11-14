@@ -1,0 +1,8 @@
+target/
+.idea/
+*.iws
+*.iml
+*.ipr
+.mvn/wrapper/maven-wrapper.jar
+extensions/configure-postgresql.cli
+*.txt

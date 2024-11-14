@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:fn="jakarta.tags.functions"
+      xmlns:of="http://omnifaces.org/functions">
+<head>
+    <title>Error</title>
+</head>
+<body>
+<!-- https://showcase.omnifaces.org/exceptionhandlers/FullAjaxExceptionHandler -->
+<h1>Some error happend, IDK</h1>
+<p><a href="#{request.contextPath}/login">Click here if you don't want to see this scary page</a>!</p>
+<br/>
+<ul>
+    <li>Date/time: #{of:formatDate(now, 'yyyy-MM-dd HH:mm:ss')}</li>
+    <li>User agent: #{header['user-agent']}</li>
+    <li>User IP: #{request.remoteAddr}</li>
+    <li>Request URI: #{requestScope['jakarta.servlet.error.request_uri']}</li>
+    <li>Ajax request: #{facesContext.partialViewContext.ajaxRequest ? 'Yes' : 'No'}</li>
+    <li>Status code: #{requestScope['jakarta.servlet.error.status_code']}</li>
+    <li>Exception type: #{requestScope['jakarta.servlet.error.exception_type']}</li>
+    <li>Exception message: #{requestScope['jakarta.servlet.error.message']}</li>
+    <li>Exception UUID: #{requestScope['org.omnifaces.exception_uuid']}</li>
+    <li>Stack trace:
+        <pre>#{of:printStackTrace(requestScope['jakarta.servlet.error.exception'])}</pre>
+    </li>
+</ul>
+</body>
+</html>
