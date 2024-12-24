@@ -2,9 +2,6 @@ package com.twillice.itmoislab1.service;
 
 import com.twillice.itmoislab1.model.User;
 import jakarta.ejb.Stateless;
-import jakarta.enterprise.context.RequestScoped;
-import jakarta.enterprise.inject.Produces;
-import jakarta.inject.Named;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
