@@ -1,5 +1,6 @@
 package com.twillice.itmoislab1.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -15,7 +16,7 @@ import java.util.Objects;
 
 @Entity
 @Getter @Setter
-public class SpaceMarine extends BaseModel {
+public class SpaceMarine extends BaseEntity {
     @Embedded
     @Valid
     private Coordinates coordinates = new Coordinates();
@@ -44,6 +45,7 @@ public class SpaceMarine extends BaseModel {
     private Weapon weapon;
 
     @OneToMany(mappedBy = "entity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<ChangeHistory> changeHistory = new ArrayList<>();
 
     public void setUpdateFields(User updatedBy, ZonedDateTime updatedTime) {
@@ -69,9 +71,39 @@ public class SpaceMarine extends BaseModel {
         return getId() != null && Objects.equals(getId(), that.getId());
     }
 
+    public final boolean equalsByFields(Object o) {
+        if (this == o) return true;
+        if (o == null) return false;
+        Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
+        Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
+        if (thisEffectiveClass != oEffectiveClass) return false;
+        SpaceMarine that = (SpaceMarine) o;
+        return Objects.equals(getName(), that.getName())
+                && Objects.equals(getLoyal(), that.getLoyal())
+                && Objects.equals(getHealth(), that.getHealth())
+                && Objects.equals(getEditAllowed(), that.getEditAllowed())
+                && Objects.equals(getCategory(), that.getCategory())
+                && Objects.equals(getWeapon(), that.getWeapon())
+                && Objects.equals(getCoordinates(), that.getCoordinates())
+                && Objects.equals(getChapter(), that.getChapter());
+    }
+
     @Override
     public final int hashCode() {
         return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
+    }
+
+    public SpaceMarine getCloneByFields() {
+        var spaceMarine = new SpaceMarine();
+        spaceMarine.setName(getName());
+        spaceMarine.setLoyal(getLoyal());
+        spaceMarine.setHealth(getHealth());
+        spaceMarine.setEditAllowed(getEditAllowed());
+        spaceMarine.setCategory(getCategory());
+        spaceMarine.setWeapon(getWeapon());
+        spaceMarine.setCoordinates(getCoordinates());
+        spaceMarine.setChapter(getChapter());
+        return spaceMarine;
     }
 
     @Entity

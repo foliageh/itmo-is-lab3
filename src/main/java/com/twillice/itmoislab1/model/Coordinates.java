@@ -2,7 +2,6 @@ package com.twillice.itmoislab1.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -22,4 +21,20 @@ public class Coordinates {
     @NotNull(message = "Coordinate Y must not be empty")
     @Max(value = 913, message = "Coordinate Y must be <= 913")
     private Double y;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Coordinates that = (Coordinates) o;
+        return x.equals(that.x) && y.equals(that.y);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = x.hashCode();
+        result = 31 * result + y.hashCode();
+        return result;
+    }
 }

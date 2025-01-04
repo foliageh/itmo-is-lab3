@@ -1,6 +1,5 @@
 package com.twillice.itmoislab1;
 
-import com.twillice.itmoislab1.model.UserRole;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.faces.annotation.FacesConfig;
 import jakarta.security.enterprise.authentication.mechanism.http.CustomFormAuthenticationMechanismDefinition;

@@ -1,2 +1,3 @@
 # Lab work #2
 description in progress...
+![img.png](jmeter_screenshot.png)

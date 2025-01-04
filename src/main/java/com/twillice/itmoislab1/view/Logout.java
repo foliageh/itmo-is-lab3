@@ -6,7 +6,8 @@ import jakarta.inject.Named;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 
-@Named @RequestScoped
+@Named
+@RequestScoped
 public class Logout {
     @Inject
     private HttpServletRequest request;

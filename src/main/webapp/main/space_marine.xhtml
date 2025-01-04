@@ -20,6 +20,16 @@
                             <p:resetInput target=":dialogs:manage-space-marine-content"/>
                         </p:commandButton>
                     </p:toolbarGroup>
+                    <p:toolbarGroup align="right">
+                        <p:commandButton value="Import" icon="pi pi-download"
+                                         styleClass="mr-2"
+                                         update="@widgetVar(importSpaceMarinesDialog)"
+                                         oncomplete="PF('importSpaceMarinesDialog').show()">
+                        </p:commandButton>
+                        <p:commandButton value="Export" icon="pi pi-upload" styleClass="ui-button-help" ajax="false">
+                            <p:fileDownload value="#{spaceMarinesView.exportFile}"/>
+                        </p:commandButton>
+                    </p:toolbarGroup>
                 </p:toolbar>
 
                 <p:poll listener="#{spaceMarinesView.refreshData}" update="@next" interval="5"/>
@@ -100,6 +110,7 @@
                                          update="@widgetVar(manageSpaceMarineDialog)" process="@this"
                                          oncomplete="PF('manageSpaceMarineDialog').show()">
                             <f:setPropertyActionListener value="#{spaceMarine}" target="#{spaceMarinesView.selectedSpaceMarine}"/>
+                            <f:setPropertyActionListener value="#{spaceMarine.cloneByFields}" target="#{spaceMarinesView.selectedSpaceMarineInitialState}"/>
                             <p:resetInput target=":dialogs:manage-space-marine-content"/>
                         </p:commandButton>
                         <p:commandButton icon="pi pi-trash" rendered="#{spaceMarine.isDeletableByUser(spaceMarinesView.user)}"
@@ -223,7 +234,8 @@
                                     </div>
                                 </p:tab>
                                 <p:tab title="Change History">
-                                    <p:dataTable var="history" value="#{spaceMarinesView.selectedSpaceMarine.changeHistory}" sortMode="single">
+                                    <p:dataTable var="history" value="#{spaceMarinesView.selectedSpaceMarine.changeHistory}"
+                                                 widgetVar="dtSpaceMarineChangeHistory" sortMode="single">
                                         <p:column headerText="Changed time" sortBy="#{history.id}" sortOrder="desc">
                                             <h:outputText value="#{history.changeTime}">
                                                 <f:convertDateTime type="zonedDateTime" pattern="dd.MM.yyyy HH:mm"/>
@@ -247,6 +259,34 @@
                                          onclick="PF('manageSpaceMarineDialog').hide()"
                                          rendered="#{spaceMarinesView.selectedSpaceMarineEditable}"/>
                     </f:facet>
+                </p:dialog>
+
+                <p:dialog widgetVar="importSpaceMarinesDialog" header="Import Space Marines"
+                          modal="true" showEffect="fade" responsive="true" fitViewport="true">
+                    <p:outputPanel id="import-space-marines-content" styleClass="ui-fluid" style="width: 50rem">
+                        <p:fileUpload listener="#{spaceMarinesView.handleDataImport}" auto="true" accept="application/json"
+                                      label="Import" chooseIcon="pi pi-download" mode="simple" skinSimple="true"
+                                      update="import-space-marines-content" process="import-space-marines-content"/>
+                        <p:dataTable var="importHistory" widgetVar="dtSpaceMarinesImportHistory" value="#{spaceMarinesView.importHistory}">
+                            <p:column headerText="Id" width="50">
+                                <h:outputText value="#{importHistory.id}"/>
+                            </p:column>
+                            <p:column headerText="Status" width="90">
+                                <h:outputText value="#{importHistory.success ? 'Success': 'Fail'}"/>
+                            </p:column>
+                            <p:column headerText="Entities Added" width="130">
+                                <h:outputText value="#{importHistory.entitiesAdded}"/>
+                            </p:column>
+                            <p:column headerText="Import Time">
+                                <h:outputText value="#{importHistory.importedTime}">
+                                    <f:convertDateTime type="zonedDateTime" pattern="dd.MM.yyyy HH:mm"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Imported By">
+                                <h:outputText value="#{importHistory.importedBy}"/>
+                            </p:column>
+                        </p:dataTable>
+                    </p:outputPanel>
                 </p:dialog>
 
                 <p:confirmDialog widgetVar="deleteSpaceMarineDialog" header="Confirm" message="Delete the space marine?"

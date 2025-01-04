@@ -1,5 +1,7 @@
 package com.twillice.itmoislab1.view;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.twillice.itmoislab1.model.*;
 import com.twillice.itmoislab1.security.Security;
 import com.twillice.itmoislab1.service.ChapterService;
@@ -12,8 +14,13 @@ import jakarta.inject.Named;
 import lombok.Getter;
 import lombok.Setter;
 import org.primefaces.PrimeFaces;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.FilterMeta;
+import org.primefaces.model.StreamedContent;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +32,7 @@ public class SpaceMarinesView implements Serializable {
     private List<SpaceMarine> spaceMarines;
 
     private SpaceMarine selectedSpaceMarine;
+    private SpaceMarine selectedSpaceMarineInitialState;
     private List<SpaceMarine> filteredSpaceMarines;
     private List<FilterMeta> filterBy;
 
@@ -55,22 +63,21 @@ public class SpaceMarinesView implements Serializable {
     public void saveSpaceMarine() {
         if (selectedSpaceMarine.getId() == null) {
             spaceMarineService.create(selectedSpaceMarine);
-            MessageManager.info("Space marine added.", null);
         } else {
-            spaceMarineService.update(selectedSpaceMarine);
-            MessageManager.info("Space marine updated.", null);
+            if (spaceMarineService.update(selectedSpaceMarineInitialState, selectedSpaceMarine))
+                selectedSpaceMarineInitialState = selectedSpaceMarine.getCloneByFields();
         }
 
         // PrimeFaces.current().executeScript("PF('manageSpaceMarineDialog').hide()");
 
         refreshData();
         PrimeFaces.current().ajax().update("@widgetVar(dtSpaceMarines)");
+        PrimeFaces.current().ajax().update("@widgetVar(dtSpaceMarineChangeHistory)");
     }
 
     public void deleteSelectedSpaceMarine() {
         spaceMarineService.remove(selectedSpaceMarine);
         selectedSpaceMarine = null;
-        MessageManager.info("Space marine removed.", null);
 
         refreshData();
         PrimeFaces.current().ajax().update("@widgetVar(dtSpaceMarines)");
@@ -101,5 +108,51 @@ public class SpaceMarinesView implements Serializable {
 
     public Weapon[] getWeapons() {
         return Weapon.values();
+    }
+
+    public List<SpaceMarinesImportHistory> getImportHistory() {
+        return spaceMarineService.getImportHistory();
+    }
+
+    public void handleDataImport(FileUploadEvent event) {
+        List<SpaceMarine> newSpaceMarines;
+        try (InputStream inputStream = event.getFile().getInputStream()) {
+            try {
+                var objectMapper = new ObjectMapper().findAndRegisterModules();
+                newSpaceMarines = objectMapper.readValue(inputStream, new TypeReference<>() {});
+            } catch (Exception e) {
+                MessageManager.error("Failed to parse JSON", null); //e.getMessage());
+                return;
+            }
+        } catch (Exception e) {
+            MessageManager.error("Something went wrong with the file", e.getMessage());
+            return;
+        }
+
+        int importedCount = spaceMarineService.importAll(newSpaceMarines);
+
+        PrimeFaces.current().ajax().update("@widgetVar(dtSpaceMarinesImportHistory)");
+        if (importedCount > 0) {
+            refreshData();
+            PrimeFaces.current().ajax().update("@widgetVar(dtSpaceMarines)");
+        }
+    }
+
+    public StreamedContent getExportFile() {
+        String json;
+        try {
+            var objectMapper = new ObjectMapper().findAndRegisterModules();
+            json = objectMapper.writeValueAsString(spaceMarines);
+        } catch (Exception e) {
+            MessageManager.error("Failed to convert space marines to JSON", e.getMessage());
+            return null;
+        }
+
+        InputStream inputStream = new ByteArrayInputStream(json.getBytes());
+        return DefaultStreamedContent.builder()
+                .name("space_marines_data.json")
+                .contentType("application/json")
+                .stream(() -> inputStream)
+                .build();
     }
 }

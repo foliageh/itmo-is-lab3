@@ -1,7 +1,8 @@
 package com.twillice.itmoislab1.model;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.proxy.HibernateProxy;
 
@@ -10,20 +11,23 @@ import java.util.Objects;
 
 @MappedSuperclass
 @Getter @Setter
-public abstract class EntityChangeHistory<T extends BaseEntity> {
+public class EntitiesImportHistory<T extends BaseEntity> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(optional = false)//, cascade = CascadeType.ALL)
-    private T entity;
+    @Column(nullable = false)
+    private Boolean success = false;
+
+    @Column(nullable = false)
+    private Integer entitiesAdded = 0;
 
     @ManyToOne(optional = false)
-    private User changedBy;
+    private User importedBy;
 
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false)
     @CreationTimestamp
-    private ZonedDateTime changeTime;
+    private ZonedDateTime importedTime;
 
     @Override
     public final boolean equals(Object o) {

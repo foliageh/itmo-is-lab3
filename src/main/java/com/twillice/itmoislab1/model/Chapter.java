@@ -1,5 +1,6 @@
 package com.twillice.itmoislab1.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -14,7 +15,7 @@ import java.util.Objects;
 
 @Entity
 @Getter @Setter
-public class Chapter extends BaseModel {
+public class Chapter extends BaseEntity {
     @Column
     private String parentLegion;  // may be empty
 
@@ -27,6 +28,7 @@ public class Chapter extends BaseModel {
     private String world;  // may be empty
 
     @OneToMany(mappedBy = "entity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<ChangeHistory> changeHistory = new ArrayList<>();
 
     public void setUpdateFields(User updatedBy, ZonedDateTime updatedTime) {
@@ -52,9 +54,33 @@ public class Chapter extends BaseModel {
         return getId() != null && Objects.equals(getId(), chapter.getId());
     }
 
+    public final boolean equalsByFields(Object o) {
+        if (this == o) return true;
+        if (o == null) return false;
+        Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
+        Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
+        if (thisEffectiveClass != oEffectiveClass) return false;
+        Chapter chapter = (Chapter) o;
+        return getName() != null && Objects.equals(getName(), chapter.getName())
+                && Objects.equals(getParentLegion(), chapter.getParentLegion())
+                && Objects.equals(getMarinesCount(), chapter.getMarinesCount())
+                && Objects.equals(getWorld(), chapter.getWorld())
+                && Objects.equals(getEditAllowed(), chapter.getEditAllowed());
+    }
+
     @Override
     public final int hashCode() {
         return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
+    }
+
+    public Chapter getCloneByFields() {
+        var chapter = new Chapter();
+        chapter.setName(getName());
+        chapter.setParentLegion(getParentLegion());
+        chapter.setMarinesCount(getMarinesCount());
+        chapter.setWorld(getWorld());
+        chapter.setEditAllowed(getEditAllowed());
+        return chapter;
     }
 
     @Entity

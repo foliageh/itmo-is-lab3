@@ -21,6 +21,16 @@
                             <p:resetInput target=":dialogs:manage-chapter-content"/>
                         </p:commandButton>
                     </p:toolbarGroup>
+                    <p:toolbarGroup align="right">
+                        <p:commandButton value="Import" icon="pi pi-download"
+                                         styleClass="mr-2"
+                                         update="@widgetVar(importChaptersDialog)"
+                                         oncomplete="PF('importChaptersDialog').show()">
+                        </p:commandButton>
+                        <p:commandButton value="Export" icon="pi pi-upload" styleClass="ui-button-help" ajax="false">
+                            <p:fileDownload value="#{chaptersView.exportFile}"/>
+                        </p:commandButton>
+                    </p:toolbarGroup>
                 </p:toolbar>
 
                 <p:poll listener="#{chaptersView.refreshData}" update="@next" interval="5"/>
@@ -70,6 +80,7 @@
                                          update="@widgetVar(manageChapterDialog)" process="@this"
                                          oncomplete="PF('manageChapterDialog').show()">
                             <f:setPropertyActionListener value="#{chapter}" target="#{chaptersView.selectedChapter}"/>
+                            <f:setPropertyActionListener value="#{chapter.cloneByFields}" target="#{chaptersView.selectedChapterInitialState}"/>
                             <p:resetInput target=":dialogs:manage-chapter-content"/>
                         </p:commandButton>
                         <p:commandButton icon="pi pi-trash" rendered="#{chapter.isDeletableByUser(chaptersView.user)}"
@@ -162,7 +173,8 @@
                                     </div>
                                 </p:tab>
                                 <p:tab title="Change History">
-                                    <p:dataTable var="history" value="#{chaptersView.selectedChapter.changeHistory}" sortMode="single">
+                                    <p:dataTable var="history" value="#{chaptersView.selectedChapter.changeHistory}"
+                                                 widgetVar="dtChapterChangeHistory" sortMode="single">
                                         <p:column headerText="Changed time" sortBy="#{history.id}" sortOrder="desc">
                                             <h:outputText value="#{history.changeTime}">
                                                 <f:convertDateTime type="zonedDateTime" pattern="dd.MM.yyyy HH:mm"/>
@@ -186,6 +198,34 @@
                                          onclick="PF('manageChapterDialog').hide()"
                                          rendered="#{chaptersView.selectedChapterEditable}"/>
                     </f:facet>
+                </p:dialog>
+
+                <p:dialog widgetVar="importChaptersDialog" header="Import Chapters"
+                          modal="true" showEffect="fade" responsive="true" fitViewport="true">
+                    <p:outputPanel id="import-chapters-content" styleClass="ui-fluid" style="width: 50rem">
+                        <p:fileUpload listener="#{chaptersView.handleDataImport}" auto="true" accept="application/json"
+                                      label="Import" chooseIcon="pi pi-download" mode="simple" skinSimple="true"
+                                      update="import-chapters-content" process="import-chapters-content"/>
+                        <p:dataTable var="importHistory" widgetVar="dtChaptersImportHistory" value="#{chaptersView.importHistory}">
+                            <p:column headerText="Id" width="50">
+                                <h:outputText value="#{importHistory.id}"/>
+                            </p:column>
+                            <p:column headerText="Status" width="90">
+                                <h:outputText value="#{importHistory.success ? 'Success': 'Fail'}"/>
+                            </p:column>
+                            <p:column headerText="Entities Added" width="130">
+                                <h:outputText value="#{importHistory.entitiesAdded}"/>
+                            </p:column>
+                            <p:column headerText="Import Time">
+                                <h:outputText value="#{importHistory.importedTime}">
+                                    <f:convertDateTime type="zonedDateTime" pattern="dd.MM.yyyy HH:mm"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Imported By">
+                                <h:outputText value="#{importHistory.importedBy}"/>
+                            </p:column>
+                        </p:dataTable>
+                    </p:outputPanel>
                 </p:dialog>
 
                 <p:dialog widgetVar="deleteChapterDialog" header="Delete the chapter?"

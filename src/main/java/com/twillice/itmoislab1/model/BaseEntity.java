@@ -1,5 +1,6 @@
 package com.twillice.itmoislab1.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
@@ -13,10 +14,11 @@ import java.time.ZonedDateTime;
 
 @MappedSuperclass
 @Getter @Setter
-public abstract class BaseModel implements Serializable {
+public abstract class BaseEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
+    @JsonIgnore
     private Long id;
 
     @Column(nullable = false)
@@ -25,20 +27,25 @@ public abstract class BaseModel implements Serializable {
 
     @Column(nullable = false)
     @CreationTimestamp
+    @JsonIgnore
     private ZonedDateTime createdTime;
 
     @Column
     @UpdateTimestamp
+    @JsonIgnore
     private ZonedDateTime updatedTime;
 
     @ManyToOne(optional = false)
+    @JsonIgnore
     private User createdBy;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     private User updatedBy;
 
     @Column(nullable = false)
     @ColumnDefault("true")
+    @JsonIgnore
     private Boolean editAllowed = true;
 
     public boolean isCreatedByUser(User user) {
