@@ -93,6 +93,7 @@ public class SpaceMarine extends BaseEntity {
         return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
     }
 
+    @JsonIgnore
     public SpaceMarine getCloneByFields() {
         var spaceMarine = new SpaceMarine();
         spaceMarine.setName(getName());

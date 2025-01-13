@@ -88,9 +88,12 @@ public class ChapterService {
 
     @Transactional(rollbackOn = Exception.class)
     public void remove(Chapter chapter) {
-        if (find(chapter.getId()) != null)
+        if (find(chapter.getId()) != null) {
             em.remove(em.contains(chapter) ? chapter : em.merge(chapter));
-        MessageManager.info("Chapter removed.", null);
+            MessageManager.info("Chapter removed.", null);
+        } else {
+            MessageManager.info("Chapter was removed by another user.", null);
+        }
     }
 
     @Transactional(rollbackOn = Exception.class)

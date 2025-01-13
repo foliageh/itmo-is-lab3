@@ -13,7 +13,7 @@
             <h:form id="form">
                 <p:toolbar>
                     <p:toolbarGroup>
-                        <p:commandButton value="New" icon="pi pi-plus"
+                        <p:commandButton value="New" id="bNew" icon="pi pi-plus"
                                          styleClass="ui-button-success mr-2"
                                          actionListener="#{chaptersView.openNew}"
                                          update="@widgetVar(manageChapterDialog)"
@@ -22,7 +22,7 @@
                         </p:commandButton>
                     </p:toolbarGroup>
                     <p:toolbarGroup align="right">
-                        <p:commandButton value="Import" icon="pi pi-download"
+                        <p:commandButton value="Import" id="bImportOpen" icon="pi pi-download"
                                          styleClass="mr-2"
                                          update="@widgetVar(importChaptersDialog)"
                                          oncomplete="PF('importChaptersDialog').show()">
@@ -37,7 +37,7 @@
                 <!--Not using selectionRowMode="add" so that the edit form opens correctly on dbclick-->
                 <!--<p:dataTable ... selection="#{chaptersView.selectedChapter}" selectionRowMode="new" ...-->
                 <p:dataTable value="#{chaptersView.chapters}" var="chapter" widgetVar="dtChapters"
-                             styleClass="crud-objects-table"
+                             id="table" styleClass="crud-objects-table"
                              rowKey="#{chapter.id}"
                              filteredValue="#{chaptersView.filteredChapters}" filterBy="#{chaptersView.filterBy}"
                              emptyMessage="No chapters found with given criteria."
@@ -75,7 +75,7 @@
                     </p:column>
 
                     <p:column exportable="false" ariaHeaderText="Actions">
-                        <p:commandButton icon="pi pi-#{chapter.isEditableByUser(chaptersView.user) ? 'pencil' : 'search'}"
+                        <p:commandButton id="bEdit" icon="pi pi-#{chapter.isEditableByUser(chaptersView.user) ? 'pencil' : 'search'}"
                                          styleClass="edit-button rounded-button mr-2 ui-button-#{chapter.isEditableByUser(chaptersView.user) ? 'success' : 'info'}"
                                          update="@widgetVar(manageChapterDialog)" process="@this"
                                          oncomplete="PF('manageChapterDialog').show()">
@@ -83,7 +83,7 @@
                             <f:setPropertyActionListener value="#{chapter.cloneByFields}" target="#{chaptersView.selectedChapterInitialState}"/>
                             <p:resetInput target=":dialogs:manage-chapter-content"/>
                         </p:commandButton>
-                        <p:commandButton icon="pi pi-trash" rendered="#{chapter.isDeletableByUser(chaptersView.user)}"
+                        <p:commandButton id="bDeleteOpen" icon="pi pi-trash" rendered="#{chapter.isDeletableByUser(chaptersView.user)}"
                                          styleClass="ui-button-warning rounded-button"
                                          update="@widgetVar(deleteChapterDialog)" process="@this"
                                          oncomplete="PF('deleteChapterDialog').show()">
@@ -102,15 +102,15 @@
             </h:form>
 
             <h:form id="dialogs">
-                <p:dialog widgetVar="manageChapterDialog" header="Chapter Details"
+                <p:dialog widgetVar="manageChapterDialog" id="dCard" header="Chapter Details"
                           modal="true" showEffect="fade" responsive="true" fitViewport="true">
                     <p:outputPanel id="manage-chapter-content" styleClass="ui-fluid w-30rem">
                         <p:outputPanel rendered="#{not empty chaptersView.selectedChapter}">
-                            <p:tabView>
+                            <p:tabView id="cardTabs">
                                 <p:tab title="Details">
                                     <div class="field">
                                         <p:outputLabel value="Name" for="@next"/>
-                                        <p:inputText value="#{chaptersView.selectedChapter.name}"
+                                        <p:inputText id="fName" value="#{chaptersView.selectedChapter.name}"
                                                      readonly="#{not chaptersView.selectedChapterEditable}">
                                             <p:clientValidator event="keyup"/>
                                         </p:inputText>
@@ -119,7 +119,7 @@
                                     <div class="formgrid grid">
                                         <div class="field col">
                                             <p:outputLabel value="Parent legion" for="@next"/>
-                                            <p:inputText value="#{chaptersView.selectedChapter.parentLegion}"
+                                            <p:inputText id="fLegion" value="#{chaptersView.selectedChapter.parentLegion}"
                                                          readonly="#{not chaptersView.selectedChapterEditable}">
                                                 <p:clientValidator event="keyup"/>
                                             </p:inputText>
@@ -127,7 +127,7 @@
                                         </div>
                                         <div class="field col">
                                             <p:outputLabel value="World" for="@next"/>
-                                            <p:inputText value="#{chaptersView.selectedChapter.world}"
+                                            <p:inputText id="fWorld" value="#{chaptersView.selectedChapter.world}"
                                                          readonly="#{not chaptersView.selectedChapterEditable}">
                                                 <p:clientValidator event="keyup"/>
                                             </p:inputText>
@@ -136,7 +136,7 @@
                                     </div>
                                     <div class="field">
                                         <p:outputLabel value="Marines count" for="@next"/>
-                                        <p:inputNumber value="#{chaptersView.selectedChapter.marinesCount}"
+                                        <p:inputNumber id="fMarines" value="#{chaptersView.selectedChapter.marinesCount}"
                                                        readonly="#{not chaptersView.selectedChapterEditable}">
                                             <p:clientValidator event="keyup"/>
                                         </p:inputNumber>
@@ -144,7 +144,7 @@
                                     </div>
                                     <div class="field">
                                         <p:outputLabel value="Edit allowed (can the admin remove)" for="@next"/>
-                                        <p:selectBooleanCheckbox value="#{chaptersView.selectedChapter.editAllowed}"
+                                        <p:selectBooleanCheckbox id="fEditAllowed" value="#{chaptersView.selectedChapter.editAllowed}"
                                                                  styleClass="w-full" disabled="#{not chaptersView.selectedChapterCreatedByUser}"/>
                                     </div>
                                     <div class="formgrid grid">
@@ -189,7 +189,7 @@
                         </p:outputPanel>
                     </p:outputPanel>
                     <f:facet name="footer">
-                        <p:commandButton value="Save" icon="pi pi-check"
+                        <p:commandButton value="Save" id="bCardSave" icon="pi pi-check"
                                          actionListener="#{chaptersView.saveChapter}"
                                          update="manage-chapter-content" process="manage-chapter-content @this"
                                          rendered="#{chaptersView.selectedChapterEditable}"/>
@@ -200,11 +200,12 @@
                     </f:facet>
                 </p:dialog>
 
-                <p:dialog widgetVar="importChaptersDialog" header="Import Chapters"
+                <p:dialog widgetVar="importChaptersDialog" id="dImport" header="Import Chapters"
                           modal="true" showEffect="fade" responsive="true" fitViewport="true">
                     <p:outputPanel id="import-chapters-content" styleClass="ui-fluid" style="width: 50rem">
-                        <p:fileUpload listener="#{chaptersView.handleDataImport}" auto="true" accept="application/json"
-                                      label="Import" chooseIcon="pi pi-download" mode="simple" skinSimple="true"
+                        <p:fileUpload id="bImport" label="Import" accept="application/json"
+                                      listener="#{chaptersView.handleDataImport}" auto="true"
+                                      chooseIcon="pi pi-download" mode="simple" skinSimple="true"
                                       update="import-chapters-content" process="import-chapters-content"/>
                         <p:dataTable var="importHistory" widgetVar="dtChaptersImportHistory" value="#{chaptersView.importHistory}">
                             <p:column headerText="Id" width="50">
@@ -228,7 +229,7 @@
                     </p:outputPanel>
                 </p:dialog>
 
-                <p:dialog widgetVar="deleteChapterDialog" header="Delete the chapter?"
+                <p:dialog widgetVar="deleteChapterDialog" id="dDelete" header="Delete the chapter?"
                           modal="true" showEffect="fade" responsive="true" fitViewport="true">
                     <p:outputPanel styleClass="ui-fluid" style="width: 50rem" rendered="#{not empty chaptersView.selectedChapter}">
 <!--                    <p:outputPanel rendered="#{not empty chaptersView.selectedChapter}">-->
@@ -274,7 +275,7 @@
                                          rendered="#{chaptersView.checkSelectedChapterHasUneditableRelatedSpaceMarines}"/>
                     </p:outputPanel>
                     <f:facet name="footer">
-                        <p:commandButton value="Delete" icon="pi pi-times" styleClass="ui-button-danger" id="delete-chapter-button"
+                        <p:commandButton value="Delete" id="bDelete" icon="pi pi-times" styleClass="ui-button-danger"
                                          actionListener="#{chaptersView.deleteSelectedChapter}"
                                          rendered="#{not chaptersView.checkSelectedChapterHasUneditableRelatedSpaceMarines}"
                                          disabled="#{not empty chaptersView.relatedSpaceMarines}"

@@ -119,7 +119,7 @@ public class ChaptersView implements Serializable {
     public void onRelatedSpaceMarineRowEdit(RowEditEvent<SpaceMarine> event) {
         relatedSpaceMarines.remove(event.getObject());
         spaceMarineService.update(null, event.getObject());
-        PrimeFaces.current().ajax().update(":dialogs:delete-chapter-button");
+        PrimeFaces.current().ajax().update(":dialogs:bDelete");
         PrimeFaces.current().ajax().update(":dialogs:related-space-marines");
     }
 

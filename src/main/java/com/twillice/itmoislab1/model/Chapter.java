@@ -73,6 +73,7 @@ public class Chapter extends BaseEntity {
         return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
     }
 
+    @JsonIgnore
     public Chapter getCloneByFields() {
         var chapter = new Chapter();
         chapter.setName(getName());

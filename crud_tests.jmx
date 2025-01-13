@@ -5,11 +5,13 @@
       <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
         <collectionProp name="Arguments.arguments"/>
       </elementProp>
+      <boolProp name="TestPlan.functional_mode">false</boolProp>
+      <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
     </TestPlan>
     <hashTree>
       <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group">
-        <intProp name="ThreadGroup.num_threads">20</intProp>
-        <intProp name="ThreadGroup.ramp_time">10</intProp>
+        <intProp name="ThreadGroup.num_threads">10</intProp>
+        <intProp name="ThreadGroup.ramp_time">3</intProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller">
@@ -67,33 +69,26 @@
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
                 <stringProp name="Argument.name">login</stringProp>
               </elementProp>
-              <elementProp name="login%3Aj_idt22" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+              <elementProp name="login:fUsername" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">true</boolProp>
                 <stringProp name="Argument.value">manager</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">login%3Aj_idt22</stringProp>
+                <stringProp name="Argument.name">login:fUsername</stringProp>
               </elementProp>
-              <elementProp name="login%3Aj_idt26" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+              <elementProp name="login:fPassword" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">true</boolProp>
                 <stringProp name="Argument.value">aE6EtPaAnuBCdKx</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">login%3Aj_idt26</stringProp>
+                <stringProp name="Argument.name">login:fPassword</stringProp>
               </elementProp>
-              <elementProp name="login%3Aj_idt29" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+              <elementProp name="login:bSubmit" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">true</boolProp>
                 <stringProp name="Argument.value"></stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">login%3Aj_idt29</stringProp>
-              </elementProp>
-              <elementProp name="jakarta.faces.ViewState" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">-4449226994033145674%3A2385535420539497219</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-                <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">jakarta.faces.ViewState</stringProp>
+                <stringProp name="Argument.name">login:bSubmit</stringProp>
               </elementProp>
             </collectionProp>
           </elementProp>
@@ -109,7 +104,7 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree/>
-        <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Uniform Random Timer">
+        <UniformRandomTimer guiclass="UniformRandomTimerGui" testclass="UniformRandomTimer" testname="Uniform Random Timer" enabled="true">
           <stringProp name="ConstantTimer.delay">0</stringProp>
           <stringProp name="RandomTimer.range">1000.0</stringProp>
         </UniformRandomTimer>
@@ -124,7 +119,7 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="assert logged in">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="assert logged in" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="-865666298">Logged in as &lt;b&gt;manager</stringProp>
             </collectionProp>
@@ -134,7 +129,7 @@
             <intProp name="Assertion.test_type">2</intProp>
           </ResponseAssertion>
           <hashTree/>
-          <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree">
+          <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
             <boolProp name="ResultCollector.error_logging">false</boolProp>
             <objProp>
               <name>saveConfig</name>
@@ -172,7 +167,7 @@
           </ResultCollector>
           <hashTree/>
         </hashTree>
-        <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="extract chapters viewstate">
+        <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="extract chapters viewstate" enabled="true">
           <stringProp name="RegexExtractor.useHeaders">false</stringProp>
           <stringProp name="RegexExtractor.refname">jsfViewState</stringProp>
           <stringProp name="RegexExtractor.regex">&lt;input type=&quot;hidden&quot; name=&quot;jakarta\.faces\.ViewState&quot; id=&quot;[^&quot;]+&quot; value=&quot;([^&quot;]+)&quot;.*/&gt;</stringProp>
@@ -182,7 +177,79 @@
           <stringProp name="RegexExtractor.match_number">0</stringProp>
         </RegexExtractor>
         <hashTree/>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="new chapter open" enabled="false">
+        <ModuleController guiclass="ModuleControllerGui" testclass="ModuleController" testname="test-create">
+          <collectionProp name="ModuleController.node_path">
+            <stringProp name="764597751">Test Plan</stringProp>
+            <stringProp name="764597751">Test Plan</stringProp>
+            <stringProp name="-1352294148">create</stringProp>
+          </collectionProp>
+        </ModuleController>
+        <hashTree/>
+        <ModuleController guiclass="ModuleControllerGui" testclass="ModuleController" testname="test-update" enabled="true">
+          <collectionProp name="ModuleController.node_path">
+            <stringProp name="764597751">Test Plan</stringProp>
+            <stringProp name="764597751">Test Plan</stringProp>
+            <stringProp name="-838846263">update</stringProp>
+          </collectionProp>
+        </ModuleController>
+        <hashTree/>
+        <ModuleController guiclass="ModuleControllerGui" testclass="ModuleController" testname="test-delete" enabled="true">
+          <collectionProp name="ModuleController.node_path">
+            <stringProp name="764597751">Test Plan</stringProp>
+            <stringProp name="764597751">Test Plan</stringProp>
+            <stringProp name="-1335458389">delete</stringProp>
+          </collectionProp>
+        </ModuleController>
+        <hashTree/>
+        <ModuleController guiclass="ModuleControllerGui" testclass="ModuleController" testname="test-import" enabled="false">
+          <collectionProp name="ModuleController.node_path">
+            <stringProp name="764597751">Test Plan</stringProp>
+            <stringProp name="764597751">Test Plan</stringProp>
+            <stringProp name="-1184795739">import</stringProp>
+          </collectionProp>
+        </ModuleController>
+        <hashTree/>
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+      </hashTree>
+      <TestFragmentController guiclass="TestFragmentControllerGui" testclass="TestFragmentController" testname="create" enabled="true"/>
+      <hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="new chapter open">
           <stringProp name="HTTPSampler.path">http://localhost:8080/is-lab1/main/chapter.xhtml</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
@@ -205,7 +272,7 @@
               </elementProp>
               <elementProp name="jakarta.faces.source" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">form%3Aj_idt25</stringProp>
+                <stringProp name="Argument.value">form%3AbNew</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
                 <stringProp name="Argument.name">jakarta.faces.source</stringProp>
@@ -219,17 +286,17 @@
               </elementProp>
               <elementProp name="jakarta.faces.partial.render" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">dialogs%3Aj_idt47</stringProp>
+                <stringProp name="Argument.value">dialogs%3AdCard</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
                 <stringProp name="Argument.name">jakarta.faces.partial.render</stringProp>
               </elementProp>
-              <elementProp name="form%3Aj_idt25" elementType="HTTPArgument">
+              <elementProp name="form%3AbNew" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">form%3Aj_idt25</stringProp>
+                <stringProp name="Argument.value">form%3AbNew</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">form%3Aj_idt25</stringProp>
+                <stringProp name="Argument.name">form%3AbNew</stringProp>
               </elementProp>
               <elementProp name="form" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
@@ -238,65 +305,16 @@
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
                 <stringProp name="Argument.name">form</stringProp>
               </elementProp>
-              <elementProp name="form%3Aj_idt30%3AglobalFilter" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value"></stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-                <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">form%3Aj_idt30%3AglobalFilter</stringProp>
-              </elementProp>
-              <elementProp name="form%3Aj_idt30%3Aj_idt34%3Afilter" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value"></stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-                <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">form%3Aj_idt30%3Aj_idt34%3Afilter</stringProp>
-              </elementProp>
-              <elementProp name="form%3Aj_idt30%3Aj_idt36%3Afilter" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value"></stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-                <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">form%3Aj_idt30%3Aj_idt36%3Afilter</stringProp>
-              </elementProp>
-              <elementProp name="form%3Aj_idt30%3Aj_idt38%3Afilter" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value"></stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-                <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">form%3Aj_idt30%3Aj_idt38%3Afilter</stringProp>
-              </elementProp>
-              <elementProp name="form%3Aj_idt30%3Aj_idt40%3Afilter" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value"></stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-                <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">form%3Aj_idt30%3Aj_idt40%3Afilter</stringProp>
-              </elementProp>
-              <elementProp name="form%3Aj_idt30%3Aj_idt42%3Afilter" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value"></stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-                <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">form%3Aj_idt30%3Aj_idt42%3Afilter</stringProp>
-              </elementProp>
-              <elementProp name="form%3Aj_idt30_rppDD" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">10</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-                <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">form%3Aj_idt30_rppDD</stringProp>
-              </elementProp>
             </collectionProp>
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree/>
-        <SyncTimer guiclass="TestBeanGUI" testclass="SyncTimer" testname="Synchronizing Timer" enabled="false">
+        <SyncTimer guiclass="TestBeanGUI" testclass="SyncTimer" testname="Synchronizing Timer">
           <intProp name="groupSize">0</intProp>
           <longProp name="timeoutInMs">0</longProp>
         </SyncTimer>
         <hashTree/>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="new chapter save" enabled="false">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="new chapter save">
           <stringProp name="HTTPSampler.path">http://localhost:8080/is-lab1/main/chapter.xhtml</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
@@ -319,14 +337,14 @@
               </elementProp>
               <elementProp name="jakarta.faces.source" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">dialogs%3Aj_idt89</stringProp>
+                <stringProp name="Argument.value">dialogs%3AbCardSave</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
                 <stringProp name="Argument.name">jakarta.faces.source</stringProp>
               </elementProp>
               <elementProp name="jakarta.faces.partial.execute" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">dialogs%3Amanage-chapter-content+dialogs%3Aj_idt89</stringProp>
+                <stringProp name="Argument.value">dialogs%3Amanage-chapter-content+dialogs%3AbCardSave</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
                 <stringProp name="Argument.name">jakarta.faces.partial.execute</stringProp>
@@ -338,12 +356,12 @@
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
                 <stringProp name="Argument.name">jakarta.faces.partial.render</stringProp>
               </elementProp>
-              <elementProp name="dialogs%3Aj_idt89" elementType="HTTPArgument">
+              <elementProp name="dialogs%3AbCardSave" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">dialogs%3Aj_idt89</stringProp>
+                <stringProp name="Argument.value">dialogs%3AbCardSave</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">dialogs%3Aj_idt89</stringProp>
+                <stringProp name="Argument.name">dialogs%3AbCardSave</stringProp>
               </elementProp>
               <elementProp name="dialogs" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
@@ -352,54 +370,47 @@
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
                 <stringProp name="Argument.name">dialogs</stringProp>
               </elementProp>
-              <elementProp name="dialogs%3Aj_idt49%3Aj_idt53" elementType="HTTPArgument">
+              <elementProp name="dialogs%3AcardTabs%3AfName" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">NAME111</stringProp>
+                <stringProp name="Argument.value">NAME162221</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">dialogs%3Aj_idt49%3Aj_idt53</stringProp>
+                <stringProp name="Argument.name">dialogs%3AcardTabs%3AfName</stringProp>
               </elementProp>
-              <elementProp name="dialogs%3Aj_idt49%3Aj_idt57" elementType="HTTPArgument">
+              <elementProp name="dialogs%3AcardTabs%3AfLegion" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">222</stringProp>
+                <stringProp name="Argument.value">leg</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">dialogs%3Aj_idt49%3Aj_idt57</stringProp>
+                <stringProp name="Argument.name">dialogs%3AcardTabs%3AfLegion</stringProp>
               </elementProp>
-              <elementProp name="dialogs%3Aj_idt49%3Aj_idt61" elementType="HTTPArgument">
+              <elementProp name="dialogs%3AcardTabs%3AfWorld" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">333</stringProp>
+                <stringProp name="Argument.value">w</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">dialogs%3Aj_idt49%3Aj_idt61</stringProp>
+                <stringProp name="Argument.name">dialogs%3AcardTabs%3AfWorld</stringProp>
               </elementProp>
-              <elementProp name="dialogs%3Aj_idt49%3Aj_idt65_input" elementType="HTTPArgument">
+              <elementProp name="dialogs%3AcardTabs%3AfMarines_input" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">444</stringProp>
+                <stringProp name="Argument.value">12</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">dialogs%3Aj_idt49%3Aj_idt65_input</stringProp>
+                <stringProp name="Argument.name">dialogs%3AcardTabs%3AfMarines_input</stringProp>
               </elementProp>
-              <elementProp name="dialogs%3Aj_idt49%3Aj_idt65_hinput" elementType="HTTPArgument">
+              <elementProp name="dialogs%3AcardTabs%3AfMarines_hinput" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">444</stringProp>
+                <stringProp name="Argument.value">12</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">dialogs%3Aj_idt49%3Aj_idt65_hinput</stringProp>
+                <stringProp name="Argument.name">dialogs%3AcardTabs%3AfMarines_hinput</stringProp>
               </elementProp>
-              <elementProp name="dialogs%3Aj_idt49%3Aj_idt69_input" elementType="HTTPArgument">
+              <elementProp name="dialogs%3AcardTabs%3AfEditAllowed_input" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.value">on</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">dialogs%3Aj_idt49%3Aj_idt69_input</stringProp>
-              </elementProp>
-              <elementProp name="dialogs%3Aj_idt49_activeIndex" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">0</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-                <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">dialogs%3Aj_idt49_activeIndex</stringProp>
+                <stringProp name="Argument.name">dialogs%3AcardTabs%3AfEditAllowed_input</stringProp>
               </elementProp>
             </collectionProp>
           </elementProp>
@@ -453,11 +464,14 @@
           </ResultCollector>
           <hashTree/>
         </hashTree>
-        <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer" enabled="false">
-          <stringProp name="ConstantTimer.delay">3000</stringProp>
+        <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer">
+          <stringProp name="ConstantTimer.delay">7000</stringProp>
         </ConstantTimer>
         <hashTree/>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="chapter open to edit" enabled="false">
+      </hashTree>
+      <TestFragmentController guiclass="TestFragmentControllerGui" testclass="TestFragmentController" testname="update"/>
+      <hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="chapter open to edit">
           <stringProp name="HTTPSampler.path">http://localhost:8080/is-lab1/main/chapter.xhtml</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
@@ -480,31 +494,31 @@
               </elementProp>
               <elementProp name="jakarta.faces.source" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">form%3Aj_idt30%3A0%3Aj_idt45</stringProp>
+                <stringProp name="Argument.value">form%3Atable%3A0%3AbEdit</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
                 <stringProp name="Argument.name">jakarta.faces.source</stringProp>
               </elementProp>
               <elementProp name="jakarta.faces.partial.execute" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">form%3Aj_idt30%3A0%3Aj_idt45</stringProp>
+                <stringProp name="Argument.value">form%3Atable%3A0%3AbEdit</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
                 <stringProp name="Argument.name">jakarta.faces.partial.execute</stringProp>
               </elementProp>
               <elementProp name="jakarta.faces.partial.render" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">dialogs%3Aj_idt47</stringProp>
+                <stringProp name="Argument.value">dialogs%3AdCard</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
                 <stringProp name="Argument.name">jakarta.faces.partial.render</stringProp>
               </elementProp>
-              <elementProp name="form%3Aj_idt30%3A0%3Aj_idt45" elementType="HTTPArgument">
+              <elementProp name="form%3Atable%3A0%3AbEdit" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">form%3Aj_idt30%3A0%3Aj_idt45</stringProp>
+                <stringProp name="Argument.value">form%3Atable%3A0%3AbEdit</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">form%3Aj_idt30%3A0%3Aj_idt45</stringProp>
+                <stringProp name="Argument.name">form%3Atable%3A0%3AbEdit</stringProp>
               </elementProp>
               <elementProp name="form" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
@@ -513,65 +527,16 @@
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
                 <stringProp name="Argument.name">form</stringProp>
               </elementProp>
-              <elementProp name="form%3Aj_idt30%3AglobalFilter" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value"></stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-                <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">form%3Aj_idt30%3AglobalFilter</stringProp>
-              </elementProp>
-              <elementProp name="form%3Aj_idt30%3Aj_idt34%3Afilter" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value"></stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-                <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">form%3Aj_idt30%3Aj_idt34%3Afilter</stringProp>
-              </elementProp>
-              <elementProp name="form%3Aj_idt30%3Aj_idt36%3Afilter" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value"></stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-                <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">form%3Aj_idt30%3Aj_idt36%3Afilter</stringProp>
-              </elementProp>
-              <elementProp name="form%3Aj_idt30%3Aj_idt38%3Afilter" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value"></stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-                <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">form%3Aj_idt30%3Aj_idt38%3Afilter</stringProp>
-              </elementProp>
-              <elementProp name="form%3Aj_idt30%3Aj_idt40%3Afilter" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value"></stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-                <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">form%3Aj_idt30%3Aj_idt40%3Afilter</stringProp>
-              </elementProp>
-              <elementProp name="form%3Aj_idt30%3Aj_idt42%3Afilter" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value"></stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-                <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">form%3Aj_idt30%3Aj_idt42%3Afilter</stringProp>
-              </elementProp>
-              <elementProp name="form%3Aj_idt30_rppDD" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">10</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-                <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">form%3Aj_idt30_rppDD</stringProp>
-              </elementProp>
             </collectionProp>
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree/>
-        <SyncTimer guiclass="TestBeanGUI" testclass="SyncTimer" testname="Synchronizing Timer" enabled="false">
+        <SyncTimer guiclass="TestBeanGUI" testclass="SyncTimer" testname="Synchronizing Timer">
           <intProp name="groupSize">0</intProp>
           <longProp name="timeoutInMs">0</longProp>
         </SyncTimer>
         <hashTree/>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="chapter update and save" enabled="false">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="chapter update and save">
           <stringProp name="HTTPSampler.path">http://localhost:8080/is-lab1/main/chapter.xhtml</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
@@ -594,14 +559,14 @@
               </elementProp>
               <elementProp name="jakarta.faces.source" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">dialogs%3Aj_idt89</stringProp>
+                <stringProp name="Argument.value">dialogs%3AbCardSave</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
                 <stringProp name="Argument.name">jakarta.faces.source</stringProp>
               </elementProp>
               <elementProp name="jakarta.faces.partial.execute" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">dialogs%3Amanage-chapter-content+dialogs%3Aj_idt89</stringProp>
+                <stringProp name="Argument.value">dialogs%3Amanage-chapter-content+dialogs%3AbCardSave</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
                 <stringProp name="Argument.name">jakarta.faces.partial.execute</stringProp>
@@ -613,12 +578,12 @@
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
                 <stringProp name="Argument.name">jakarta.faces.partial.render</stringProp>
               </elementProp>
-              <elementProp name="dialogs%3Aj_idt89" elementType="HTTPArgument">
+              <elementProp name="dialogs%3AbCardSave" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">dialogs%3Aj_idt89</stringProp>
+                <stringProp name="Argument.value">dialogs%3AbCardSave</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">dialogs%3Aj_idt89</stringProp>
+                <stringProp name="Argument.name">dialogs%3AbCardSave</stringProp>
               </elementProp>
               <elementProp name="dialogs" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
@@ -627,54 +592,54 @@
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
                 <stringProp name="Argument.name">dialogs</stringProp>
               </elementProp>
-              <elementProp name="dialogs%3Aj_idt49%3Aj_idt53" elementType="HTTPArgument">
+              <elementProp name="dialogs%3AcardTabs%3AfName" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">NAME111</stringProp>
+                <stringProp name="Argument.value">NAME162221</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">dialogs%3Aj_idt49%3Aj_idt53</stringProp>
+                <stringProp name="Argument.name">dialogs%3AcardTabs%3AfName</stringProp>
               </elementProp>
-              <elementProp name="dialogs%3Aj_idt49%3Aj_idt57" elementType="HTTPArgument">
+              <elementProp name="dialogs%3AcardTabs%3AfLegion" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">222edited</stringProp>
+                <stringProp name="Argument.value">legEDITED</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">dialogs%3Aj_idt49%3Aj_idt57</stringProp>
+                <stringProp name="Argument.name">dialogs%3AcardTabs%3AfLegion</stringProp>
               </elementProp>
-              <elementProp name="dialogs%3Aj_idt49%3Aj_idt61" elementType="HTTPArgument">
+              <elementProp name="dialogs%3AcardTabs%3AfWorld" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">333</stringProp>
+                <stringProp name="Argument.value">w</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">dialogs%3Aj_idt49%3Aj_idt61</stringProp>
+                <stringProp name="Argument.name">dialogs%3AcardTabs%3AfWorld</stringProp>
               </elementProp>
-              <elementProp name="dialogs%3Aj_idt49%3Aj_idt65_input" elementType="HTTPArgument">
+              <elementProp name="dialogs%3AcardTabs%3AfMarines_input" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">444</stringProp>
+                <stringProp name="Argument.value">12</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">dialogs%3Aj_idt49%3Aj_idt65_input</stringProp>
+                <stringProp name="Argument.name">dialogs%3AcardTabs%3AfMarines_input</stringProp>
               </elementProp>
-              <elementProp name="dialogs%3Aj_idt49%3Aj_idt65_hinput" elementType="HTTPArgument">
+              <elementProp name="dialogs%3AcardTabs%3AfMarines_hinput" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">444</stringProp>
+                <stringProp name="Argument.value">12</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">dialogs%3Aj_idt49%3Aj_idt65_hinput</stringProp>
+                <stringProp name="Argument.name">dialogs%3AcardTabs%3AfMarines_hinput</stringProp>
               </elementProp>
-              <elementProp name="dialogs%3Aj_idt49%3Aj_idt69_input" elementType="HTTPArgument">
+              <elementProp name="dialogs%3AcardTabs%3AfEditAllowed_input" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.value">on</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">dialogs%3Aj_idt49%3Aj_idt69_input</stringProp>
+                <stringProp name="Argument.name">dialogs%3AcardTabs%3AfEditAllowed_input</stringProp>
               </elementProp>
-              <elementProp name="dialogs%3Aj_idt49_activeIndex" elementType="HTTPArgument">
+              <elementProp name="dialogs%3AcardTabs_activeIndex" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.value">0</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">dialogs%3Aj_idt49_activeIndex</stringProp>
+                <stringProp name="Argument.name">dialogs%3AcardTabs_activeIndex</stringProp>
               </elementProp>
             </collectionProp>
           </elementProp>
@@ -728,10 +693,235 @@
           </ResultCollector>
           <hashTree/>
         </hashTree>
-        <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer" enabled="false">
-          <stringProp name="ConstantTimer.delay">3000</stringProp>
+        <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer">
+          <stringProp name="ConstantTimer.delay">7000</stringProp>
         </ConstantTimer>
         <hashTree/>
+      </hashTree>
+      <TestFragmentController guiclass="TestFragmentControllerGui" testclass="TestFragmentController" testname="delete" enabled="true"/>
+      <hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="chapter open to delete">
+          <stringProp name="HTTPSampler.path">http://localhost:8080/is-lab1/main/chapter.xhtml</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="jakarta.faces.ViewState" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                <stringProp name="Argument.value">${jsfViewState}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">jakarta.faces.ViewState</stringProp>
+              </elementProp>
+              <elementProp name="jakarta.faces.partial.ajax" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">true</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">jakarta.faces.partial.ajax</stringProp>
+              </elementProp>
+              <elementProp name="jakarta.faces.source" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">form%3Atable%3A0%3AbDeleteOpen</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">jakarta.faces.source</stringProp>
+              </elementProp>
+              <elementProp name="jakarta.faces.partial.execute" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">form%3Atable%3A0%3AbDeleteOpen</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">jakarta.faces.partial.execute</stringProp>
+              </elementProp>
+              <elementProp name="jakarta.faces.partial.render" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">dialogs%3AdDelete</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">jakarta.faces.partial.render</stringProp>
+              </elementProp>
+              <elementProp name="form%3Atable%3A0%3AbDeleteOpen" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">form%3Atable%3A0%3AbDeleteOpen</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">form%3Atable%3A0%3AbDeleteOpen</stringProp>
+              </elementProp>
+              <elementProp name="form" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">form</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">form</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+        </HTTPSamplerProxy>
+        <hashTree/>
+        <SyncTimer guiclass="TestBeanGUI" testclass="SyncTimer" testname="Synchronizing Timer">
+          <intProp name="groupSize">0</intProp>
+          <longProp name="timeoutInMs">0</longProp>
+        </SyncTimer>
+        <hashTree/>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="chapter delete">
+          <stringProp name="HTTPSampler.path">http://localhost:8080/is-lab1/main/chapter.xhtml</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="jakarta.faces.ViewState" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                <stringProp name="Argument.value">${jsfViewState}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">jakarta.faces.ViewState</stringProp>
+              </elementProp>
+              <elementProp name="jakarta.faces.partial.ajax" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">true</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">jakarta.faces.partial.ajax</stringProp>
+              </elementProp>
+              <elementProp name="jakarta.faces.source" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">dialogs%3AbDelete</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">jakarta.faces.source</stringProp>
+              </elementProp>
+              <elementProp name="jakarta.faces.partial.execute" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">dialogs%3AbDelete</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">jakarta.faces.partial.execute</stringProp>
+              </elementProp>
+              <elementProp name="dialogs%3AbDelete" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">dialogs%3AbDelete</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">dialogs%3AbDelete</stringProp>
+              </elementProp>
+              <elementProp name="dialogs" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">dialogs</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">dialogs</stringProp>
+              </elementProp>
+              <elementProp name="dialogs%3AcardTabs%3AfName" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">NAME162221</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">dialogs%3AcardTabs%3AfName</stringProp>
+              </elementProp>
+              <elementProp name="dialogs%3AcardTabs%3AfLegion" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">legEDITED</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">dialogs%3AcardTabs%3AfLegion</stringProp>
+              </elementProp>
+              <elementProp name="dialogs%3AcardTabs%3AfWorld" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">w</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">dialogs%3AcardTabs%3AfWorld</stringProp>
+              </elementProp>
+              <elementProp name="dialogs%3AcardTabs%3AfMarines_input" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">12</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">dialogs%3AcardTabs%3AfMarines_input</stringProp>
+              </elementProp>
+              <elementProp name="dialogs%3AcardTabs%3AfMarines_hinput" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">12</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">dialogs%3AcardTabs%3AfMarines_hinput</stringProp>
+              </elementProp>
+              <elementProp name="dialogs%3AcardTabs%3AfEditAllowed_input" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">on</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">dialogs%3AcardTabs%3AfEditAllowed_input</stringProp>
+              </elementProp>
+              <elementProp name="dialogs%3AcardTabs_activeIndex" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">0</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">dialogs%3AcardTabs_activeIndex</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="assert deleted">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="540167021">Chapter removed</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.custom_message"></stringProp>
+            <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">2</intProp>
+          </ResponseAssertion>
+          <hashTree/>
+          <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree">
+            <boolProp name="ResultCollector.error_logging">false</boolProp>
+            <objProp>
+              <name>saveConfig</name>
+              <value class="SampleSaveConfiguration">
+                <time>true</time>
+                <latency>true</latency>
+                <timestamp>true</timestamp>
+                <success>true</success>
+                <label>true</label>
+                <code>true</code>
+                <message>true</message>
+                <threadName>true</threadName>
+                <dataType>true</dataType>
+                <encoding>false</encoding>
+                <assertions>true</assertions>
+                <subresults>true</subresults>
+                <responseData>false</responseData>
+                <samplerData>false</samplerData>
+                <xml>false</xml>
+                <fieldNames>true</fieldNames>
+                <responseHeaders>false</responseHeaders>
+                <requestHeaders>false</requestHeaders>
+                <responseDataOnError>false</responseDataOnError>
+                <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+                <assertionsResultsToSave>0</assertionsResultsToSave>
+                <bytes>true</bytes>
+                <sentBytes>true</sentBytes>
+                <url>true</url>
+                <threadCounts>true</threadCounts>
+                <idleTime>true</idleTime>
+                <connectTime>true</connectTime>
+              </value>
+            </objProp>
+            <stringProp name="filename"></stringProp>
+          </ResultCollector>
+          <hashTree/>
+        </hashTree>
+        <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer">
+          <stringProp name="ConstantTimer.delay">7000</stringProp>
+        </ConstantTimer>
+        <hashTree/>
+      </hashTree>
+      <TestFragmentController guiclass="TestFragmentControllerGui" testclass="TestFragmentController" testname="import"/>
+      <hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="chapters import open">
           <stringProp name="HTTPSampler.path">http://localhost:8080/is-lab1/main/chapter.xhtml</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
@@ -755,7 +945,7 @@
               </elementProp>
               <elementProp name="jakarta.faces.source" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">form%3Aj_idt27</stringProp>
+                <stringProp name="Argument.value">form%3AbImportOpen</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
                 <stringProp name="Argument.name">jakarta.faces.source</stringProp>
@@ -769,17 +959,17 @@
               </elementProp>
               <elementProp name="jakarta.faces.partial.render" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">dialogs%3Aj_idt91</stringProp>
+                <stringProp name="Argument.value">dialogs%3AdImport</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
                 <stringProp name="Argument.name">jakarta.faces.partial.render</stringProp>
               </elementProp>
-              <elementProp name="form%3Aj_idt27" elementType="HTTPArgument">
+              <elementProp name="form%3AbImportOpen" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">form%3Aj_idt27</stringProp>
+                <stringProp name="Argument.value">form%3AbImportOpen</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">form%3Aj_idt27</stringProp>
+                <stringProp name="Argument.name">form%3AbImportOpen</stringProp>
               </elementProp>
               <elementProp name="form" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
@@ -788,59 +978,48 @@
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
                 <stringProp name="Argument.name">form</stringProp>
               </elementProp>
-              <elementProp name="form%3Aj_idt30%3AglobalFilter" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value"></stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-                <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">form%3Aj_idt30%3AglobalFilter</stringProp>
-              </elementProp>
-              <elementProp name="form%3Aj_idt30%3Aj_idt34%3Afilter" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value"></stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-                <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">form%3Aj_idt30%3Aj_idt34%3Afilter</stringProp>
-              </elementProp>
-              <elementProp name="form%3Aj_idt30%3Aj_idt36%3Afilter" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value"></stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-                <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">form%3Aj_idt30%3Aj_idt36%3Afilter</stringProp>
-              </elementProp>
-              <elementProp name="form%3Aj_idt30%3Aj_idt38%3Afilter" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value"></stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-                <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">form%3Aj_idt30%3Aj_idt38%3Afilter</stringProp>
-              </elementProp>
-              <elementProp name="form%3Aj_idt30%3Aj_idt40%3Afilter" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value"></stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-                <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">form%3Aj_idt30%3Aj_idt40%3Afilter</stringProp>
-              </elementProp>
-              <elementProp name="form%3Aj_idt30%3Aj_idt42%3Afilter" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value"></stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-                <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">form%3Aj_idt30%3Aj_idt42%3Afilter</stringProp>
-              </elementProp>
-              <elementProp name="form%3Aj_idt30_rppDD" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">10</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-                <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">form%3Aj_idt30_rppDD</stringProp>
-              </elementProp>
             </collectionProp>
           </elementProp>
         </HTTPSamplerProxy>
-        <hashTree/>
+        <hashTree>
+          <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+            <boolProp name="ResultCollector.error_logging">false</boolProp>
+            <objProp>
+              <name>saveConfig</name>
+              <value class="SampleSaveConfiguration">
+                <time>true</time>
+                <latency>true</latency>
+                <timestamp>true</timestamp>
+                <success>true</success>
+                <label>true</label>
+                <code>true</code>
+                <message>true</message>
+                <threadName>true</threadName>
+                <dataType>true</dataType>
+                <encoding>false</encoding>
+                <assertions>true</assertions>
+                <subresults>true</subresults>
+                <responseData>false</responseData>
+                <samplerData>false</samplerData>
+                <xml>false</xml>
+                <fieldNames>true</fieldNames>
+                <responseHeaders>false</responseHeaders>
+                <requestHeaders>false</requestHeaders>
+                <responseDataOnError>false</responseDataOnError>
+                <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+                <assertionsResultsToSave>0</assertionsResultsToSave>
+                <bytes>true</bytes>
+                <sentBytes>true</sentBytes>
+                <url>true</url>
+                <threadCounts>true</threadCounts>
+                <idleTime>true</idleTime>
+                <connectTime>true</connectTime>
+              </value>
+            </objProp>
+            <stringProp name="filename"></stringProp>
+          </ResultCollector>
+          <hashTree/>
+        </hashTree>
         <SyncTimer guiclass="TestBeanGUI" testclass="SyncTimer" testname="Synchronizing Timer">
           <intProp name="groupSize">0</intProp>
           <longProp name="timeoutInMs">0</longProp>
@@ -851,46 +1030,65 @@
           <stringProp name="HTTPSampler.method">POST</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">true</boolProp>
-          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+          <elementProp name="HTTPsampler.Files" elementType="HTTPFileArgs">
+            <collectionProp name="HTTPFileArgs.files">
+              <elementProp name="C:\Users\mygaz\Downloads\chapters_data.json" elementType="HTTPFileArg">
+                <stringProp name="File.mimetype">application/json</stringProp>
+                <stringProp name="File.path">C:\Users\mygaz\Downloads\chapters_data.json</stringProp>
+                <stringProp name="File.paramname">dialogs:bImport_input</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <boolProp name="HTTPSampler.postBodyRaw">false</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables">
             <collectionProp name="Arguments.arguments">
-              <elementProp name="" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">хз как это сделать нормально&#xd;
-&#xd;
-------WebKitFormBoundaryW1peP8ssBEObvOVp&#xd;
-Content-Disposition: form-data; name=&quot;jakarta.faces.partial.ajax&quot;&#xd;
-&#xd;
-true&#xd;
-------WebKitFormBoundaryW1peP8ssBEObvOVp&#xd;
-Content-Disposition: form-data; name=&quot;jakarta.faces.source&quot;&#xd;
-&#xd;
-dialogs:j_idt92&#xd;
-------WebKitFormBoundaryW1peP8ssBEObvOVp&#xd;
-Content-Disposition: form-data; name=&quot;jakarta.faces.partial.execute&quot;&#xd;
-&#xd;
-dialogs:j_idt92 dialogs:import-chapters-content&#xd;
-------WebKitFormBoundaryW1peP8ssBEObvOVp&#xd;
-Content-Disposition: form-data; name=&quot;jakarta.faces.partial.render&quot;&#xd;
-&#xd;
-dialogs:import-chapters-content&#xd;
-------WebKitFormBoundaryW1peP8ssBEObvOVp&#xd;
-Content-Disposition: form-data; name=&quot;jakarta.faces.ViewState&quot;&#xd;
-&#xd;
--5402236285631764748:-4811437833474933052&#xd;
-------WebKitFormBoundaryW1peP8ssBEObvOVp&#xd;
-Content-Disposition: form-data; name=&quot;dialogs:j_idt92_input&quot;; filename=&quot;space_marines_data.json&quot;&#xd;
-Content-Type: application/json&#xd;
-&#xd;
-&#xd;
-------WebKitFormBoundaryW1peP8ssBEObvOVp--</stringProp>
+              <elementProp name="jakarta.faces.ViewState" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                <stringProp name="Argument.value">${jsfViewState}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">jakarta.faces.ViewState</stringProp>
+              </elementProp>
+              <elementProp name="jakarta.faces.partial.ajax" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">true</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">jakarta.faces.partial.ajax</stringProp>
+              </elementProp>
+              <elementProp name="jakarta.faces.source" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                <stringProp name="Argument.value">dialogs:bImport</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">jakarta.faces.source</stringProp>
+              </elementProp>
+              <elementProp name="jakarta.faces.partial.execute" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                <stringProp name="Argument.value">dialogs:bImport dialogs:import-chapters-content</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">jakarta.faces.partial.execute</stringProp>
+              </elementProp>
+              <elementProp name="jakarta.faces.partial.render" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                <stringProp name="Argument.value">dialogs:import-chapters-content</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">jakarta.faces.partial.render</stringProp>
+              </elementProp>
+              <elementProp name="form%3AbImportOpen" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">form%3AbImportOpen</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">form%3AbImportOpen</stringProp>
               </elementProp>
             </collectionProp>
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="assert import succeeded">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="assert import succeeded" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="-1453207642">import succeeded</stringProp>
             </collectionProp>
@@ -900,7 +1098,48 @@ Content-Type: application/json&#xd;
             <intProp name="Assertion.test_type">2</intProp>
           </ResponseAssertion>
           <hashTree/>
+          <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+            <boolProp name="ResultCollector.error_logging">false</boolProp>
+            <objProp>
+              <name>saveConfig</name>
+              <value class="SampleSaveConfiguration">
+                <time>true</time>
+                <latency>true</latency>
+                <timestamp>true</timestamp>
+                <success>true</success>
+                <label>true</label>
+                <code>true</code>
+                <message>true</message>
+                <threadName>true</threadName>
+                <dataType>true</dataType>
+                <encoding>false</encoding>
+                <assertions>true</assertions>
+                <subresults>true</subresults>
+                <responseData>false</responseData>
+                <samplerData>false</samplerData>
+                <xml>false</xml>
+                <fieldNames>true</fieldNames>
+                <responseHeaders>false</responseHeaders>
+                <requestHeaders>false</requestHeaders>
+                <responseDataOnError>false</responseDataOnError>
+                <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+                <assertionsResultsToSave>0</assertionsResultsToSave>
+                <bytes>true</bytes>
+                <sentBytes>true</sentBytes>
+                <url>true</url>
+                <threadCounts>true</threadCounts>
+                <idleTime>true</idleTime>
+                <connectTime>true</connectTime>
+              </value>
+            </objProp>
+            <stringProp name="filename"></stringProp>
+          </ResultCollector>
+          <hashTree/>
         </hashTree>
+        <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer" enabled="true">
+          <stringProp name="ConstantTimer.delay">7000</stringProp>
+        </ConstantTimer>
+        <hashTree/>
       </hashTree>
     </hashTree>
   </hashTree>

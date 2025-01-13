@@ -12,14 +12,15 @@
                     <div class="ui-fluid w-20rem">
                         <div class="field">
                             <p:outputLabel value="Username" for="@next"/>
-                            <p:inputText value="#{login.user.username}">
+                            <p:inputText value="#{login.user.username}" id="fUsername">
                                 <p:clientValidator event="keyup"/>
                             </p:inputText>
                             <p:message for="@previous"/>
                         </div>
                         <div class="field">
                             <p:outputLabel value="Password" for="@next"/>
-                            <p:password value="#{login.user.password}" toggleMask="true" redisplay="true">
+                            <p:password value="#{login.user.password}" id="fPassword"
+                                        toggleMask="true" redisplay="true">
                                 <p:clientValidator event="keyup"/>
                             </p:password>
                             <!--<p:inputText value="#{login.user.password}" type="password">-->
@@ -27,7 +28,7 @@
                             <!--</p:inputText>-->
                             <p:message for="@previous"/>
                         </div>
-                        <p:commandButton value="Login" update="@form" ajax="false" action="#{login.submit}" />
+                        <p:commandButton value="Login" id="bSubmit" update="@form" ajax="false" action="#{login.submit}" />
                         <div class="text-center mt-2">
                             <span>Don't have an account?</span>
                             <p:link outcome="/register" value="Register" styleClass="ml-1"/>
