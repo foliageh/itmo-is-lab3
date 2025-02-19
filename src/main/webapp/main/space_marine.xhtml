@@ -274,16 +274,21 @@
                             <p:column headerText="Status" width="90">
                                 <h:outputText value="#{importHistory.success ? 'Success': 'Fail'}"/>
                             </p:column>
-                            <p:column headerText="Entities Added" width="130">
+                            <p:column headerText="Entities Added" width="100">
                                 <h:outputText value="#{importHistory.entitiesAdded}"/>
                             </p:column>
-                            <p:column headerText="Import Time">
+                            <p:column headerText="Import Time" width="110">
                                 <h:outputText value="#{importHistory.importedTime}">
                                     <f:convertDateTime type="zonedDateTime" pattern="dd.MM.yyyy HH:mm"/>
                                 </h:outputText>
                             </p:column>
                             <p:column headerText="Imported By">
                                 <h:outputText value="#{importHistory.importedBy}"/>
+                            </p:column>
+                            <p:column exportable="false" ariaHeaderText="Actions">
+                                <p:commandButton id="bDownloadFile" icon="pi pi-download" styleClass="ui-button-help" ajax="false">
+                                    <p:fileDownload value="#{spaceMarinesView.downloadImportHistoryFile(importHistory)}"/>
+                                </p:commandButton>
                             </p:column>
                         </p:dataTable>
                     </p:outputPanel>

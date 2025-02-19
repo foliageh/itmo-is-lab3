@@ -1,6 +1,7 @@
 package com.twillice.itmoislab1.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -28,6 +29,10 @@ public class EntitiesImportHistory<T extends BaseEntity> {
     @Column(nullable = false)
     @CreationTimestamp
     private ZonedDateTime importedTime;
+
+    @Column(nullable = false)
+    @NotBlank
+    private String filename;
 
     @Override
     public final boolean equals(Object o) {

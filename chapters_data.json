@@ -1,1 +1,6 @@
-[{"name":"baobab1189","parentLegion":"itmo","marinesCount":2,"world":"sdf"}]
+[
+  {"name":"minionew","parentLegion":"itmo","marinesCount":2,"world":"sdf"},
+  {"name":"minionew1","parentLegion":"itmo","marinesCount":4,"world":"sdf1"},
+  {"name":"minionew2","parentLegion":"itmo","marinesCount":1,"world":"sdf2"},
+  {"name":"minionew3","parentLegion":"spbgu","marinesCount":5,"world":"sdf1"}
+]

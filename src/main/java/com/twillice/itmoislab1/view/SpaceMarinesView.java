@@ -1,6 +1,5 @@
 package com.twillice.itmoislab1.view;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.twillice.itmoislab1.model.*;
 import com.twillice.itmoislab1.security.Security;
@@ -19,9 +18,7 @@ import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.FilterMeta;
 import org.primefaces.model.StreamedContent;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.io.Serializable;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -115,24 +112,18 @@ public class SpaceMarinesView implements Serializable {
     }
 
     public void handleDataImport(FileUploadEvent event) {
-        List<SpaceMarine> newSpaceMarines;
+        int importedCount;
+
         try (InputStream inputStream = event.getFile().getInputStream()) {
-            try {
-                var objectMapper = new ObjectMapper().findAndRegisterModules();
-                newSpaceMarines = objectMapper.readValue(inputStream, new TypeReference<>() {});
-            } catch (Exception e) {
-                MessageManager.error("Failed to parse JSON", null); //e.getMessage());
-                return;
-            }
+            importedCount = spaceMarineService.processImport(inputStream);
         } catch (Exception e) {
             MessageManager.error("Something went wrong with the file", e.getMessage());
             return;
         }
 
-        int importedCount = spaceMarineService.importAll(newSpaceMarines);
-
-        PrimeFaces.current().ajax().update("@widgetVar(dtSpaceMarinesImportHistory)");
-        if (importedCount > 0) {
+        if (importedCount >= 0)
+            PrimeFaces.current().ajax().update("@widgetVar(dtSpaceMarinesImportHistory)");
+        if (importedCount >= 1) {
             refreshData();
             PrimeFaces.current().ajax().update("@widgetVar(dtSpaceMarines)");
         }
@@ -148,11 +139,33 @@ public class SpaceMarinesView implements Serializable {
             return null;
         }
 
-        InputStream inputStream = new ByteArrayInputStream(json.getBytes());
-        return DefaultStreamedContent.builder()
-                .name("space_marines_data.json")
-                .contentType("application/json")
-                .stream(() -> inputStream)
-                .build();
+        try (InputStream inputStream = new ByteArrayInputStream(json.getBytes())) {
+            return DefaultStreamedContent.builder()
+                    .name("space_marines_data.json")
+                    .contentType("application/json")
+                    .stream(() -> inputStream)
+                    .build();
+        } catch (IOException e) {
+            MessageManager.error("Failed to export data", e.getMessage());
+            return null;
+        }
+    }
+
+    public StreamedContent downloadImportHistoryFile(SpaceMarinesImportHistory history) {
+        try (InputStream inputStream = spaceMarineService.getImportHistoryFile(history)) {
+            var baos = new ByteArrayOutputStream();
+            inputStream.transferTo(baos);
+            var inputStreamClone = new ByteArrayInputStream(baos.toByteArray());
+            baos.close();
+
+            return DefaultStreamedContent.builder()
+                    .name("space_marines_import_history" + history.getId() + ".json")
+                    .contentType("application/json")
+                    .stream(() -> inputStreamClone)
+                    .build();
+        } catch (IOException e) {
+            MessageManager.error("Failed to download import history file", e.getMessage());
+            return null;
+        }
     }
 }

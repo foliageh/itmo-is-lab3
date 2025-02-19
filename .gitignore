@@ -6,3 +6,4 @@ target/
 .mvn/wrapper/maven-wrapper.jar
 extensions/configure-postgresql.cli
 *.txt
+minio_files/

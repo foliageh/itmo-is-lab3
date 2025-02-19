@@ -1,6 +1,5 @@
 package com.twillice.itmoislab1.view;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.twillice.itmoislab1.model.Chapter;
 import com.twillice.itmoislab1.model.ChaptersImportHistory;
@@ -23,9 +22,7 @@ import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.FilterMeta;
 import org.primefaces.model.StreamedContent;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.io.Serializable;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -128,24 +125,18 @@ public class ChaptersView implements Serializable {
     }
 
     public void handleDataImport(FileUploadEvent event) {
-        List<Chapter> newChapters;
+        int importedCount;
+
         try (InputStream inputStream = event.getFile().getInputStream()) {
-            try {
-                var objectMapper = new ObjectMapper().findAndRegisterModules();
-                newChapters = objectMapper.readValue(inputStream, new TypeReference<>() {});
-            } catch (Exception e) {
-                MessageManager.error("Failed to parse JSON", null); //e.getMessage());
-                return;
-            }
+            importedCount = chapterService.processImport(inputStream);
         } catch (Exception e) {
             MessageManager.error("Something went wrong with the file", e.getMessage());
             return;
         }
 
-        int importedCount = chapterService.importAll(newChapters);
-
-        PrimeFaces.current().ajax().update("@widgetVar(dtChaptersImportHistory)");
-        if (importedCount > 0) {
+        if (importedCount >= 0)
+            PrimeFaces.current().ajax().update("@widgetVar(dtChaptersImportHistory)");
+        if (importedCount >= 1) {
             refreshData();
             PrimeFaces.current().ajax().update("@widgetVar(dtChapters)");
         }
@@ -161,11 +152,33 @@ public class ChaptersView implements Serializable {
             return null;
         }
 
-        InputStream inputStream = new ByteArrayInputStream(json.getBytes());
-        return DefaultStreamedContent.builder()
-                .name("chapters_data.json")
-                .contentType("application/json")
-                .stream(() -> inputStream)
-                .build();
+        try (InputStream inputStream = new ByteArrayInputStream(json.getBytes())) {
+            return DefaultStreamedContent.builder()
+                    .name("chapters_data.json")
+                    .contentType("application/json")
+                    .stream(() -> inputStream)
+                    .build();
+        } catch (IOException e) {
+            MessageManager.error("Failed to export data", e.getMessage());
+            return null;
+        }
+    }
+
+    public StreamedContent downloadImportHistoryFile(ChaptersImportHistory history) {
+        try (InputStream inputStream = chapterService.getImportHistoryFile(history)) {
+            var baos = new ByteArrayOutputStream();
+            inputStream.transferTo(baos);
+            var inputStreamClone = new ByteArrayInputStream(baos.toByteArray());
+            baos.close();
+
+            return DefaultStreamedContent.builder()
+                    .name("chapters_import_history" + history.getId() + ".json")
+                    .contentType("application/json")
+                    .stream(() -> inputStreamClone)
+                    .build();
+        } catch (IOException e) {
+            MessageManager.error("Failed to download import history file", e.getMessage());
+            return null;
+        }
     }
 }
