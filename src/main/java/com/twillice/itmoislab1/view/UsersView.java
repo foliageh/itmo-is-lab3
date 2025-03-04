@@ -35,7 +35,11 @@ public class UsersView implements Serializable {
     }
 
     public void refreshData() {
-        users = userService.list();
+        try {
+            users = userService.list();
+        } catch (Exception e) {
+            MessageManager.error("Failed to load actual data!", "Lost connection to DB");
+        }
     }
 
     public void confirmUserRegistration(User user) {

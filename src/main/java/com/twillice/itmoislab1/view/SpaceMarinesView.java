@@ -50,7 +50,11 @@ public class SpaceMarinesView implements Serializable {
     }
 
     public void refreshData() {
-        spaceMarines = spaceMarineService.findAll();
+        try {
+            spaceMarines = spaceMarineService.findAll();
+        } catch (Exception e) {
+            MessageManager.error("Failed to load actual data!", "Lost connection to DB");
+        }
     }
 
     public void openNew() {

@@ -109,7 +109,7 @@
           <stringProp name="RandomTimer.range">1000.0</stringProp>
         </UniformRandomTimer>
         <hashTree/>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="chapters get">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="chapters get" enabled="true">
           <stringProp name="HTTPSampler.path">http://localhost:8080/is-lab1/main/chapter.xhtml</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
@@ -201,7 +201,7 @@
           </collectionProp>
         </ModuleController>
         <hashTree/>
-        <ModuleController guiclass="ModuleControllerGui" testclass="ModuleController" testname="test-import">
+        <ModuleController guiclass="ModuleControllerGui" testclass="ModuleController" testname="test-import" enabled="true">
           <collectionProp name="ModuleController.node_path">
             <stringProp name="764597751">Test Plan</stringProp>
             <stringProp name="764597751">Test Plan</stringProp>
@@ -920,7 +920,7 @@
         </ConstantTimer>
         <hashTree/>
       </hashTree>
-      <TestFragmentController guiclass="TestFragmentControllerGui" testclass="TestFragmentController" testname="import" enabled="true"/>
+      <TestFragmentController guiclass="TestFragmentControllerGui" testclass="TestFragmentController" testname="import"/>
       <hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="chapters import open">
           <stringProp name="HTTPSampler.path">http://localhost:8080/is-lab1/main/chapter.xhtml</stringProp>
@@ -1020,12 +1020,12 @@
           </ResultCollector>
           <hashTree/>
         </hashTree>
-        <SyncTimer guiclass="TestBeanGUI" testclass="SyncTimer" testname="Synchronizing Timer">
+        <SyncTimer guiclass="TestBeanGUI" testclass="SyncTimer" testname="Synchronizing Timer" enabled="true">
           <intProp name="groupSize">0</intProp>
           <longProp name="timeoutInMs">0</longProp>
         </SyncTimer>
         <hashTree/>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="chapters import">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="chapters import" enabled="true">
           <stringProp name="HTTPSampler.path">http://localhost:8080/is-lab1/main/chapter.xhtml</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
@@ -1088,7 +1088,7 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="assert import succeeded">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="assert import succeeded" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="-1453207642">import succeeded</stringProp>
             </collectionProp>
@@ -1098,7 +1098,7 @@
             <intProp name="Assertion.test_type">2</intProp>
           </ResponseAssertion>
           <hashTree/>
-          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="not 0 objects imported">
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="not 0 objects imported" enabled="true">
             <collectionProp name="Asserion.test_strings">
               <stringProp name="1265673642">0 objects added.</stringProp>
             </collectionProp>
@@ -1108,7 +1108,7 @@
             <intProp name="Assertion.test_type">6</intProp>
           </ResponseAssertion>
           <hashTree/>
-          <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree">
+          <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
             <boolProp name="ResultCollector.error_logging">false</boolProp>
             <objProp>
               <name>saveConfig</name>

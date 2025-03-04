@@ -10,7 +10,6 @@ import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.transaction.Transactional;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -21,17 +20,16 @@ import java.util.UUID;
 
 @Stateless
 public abstract class ImportService<T extends BaseEntity> {
+    @Inject
+    protected MinioService minioService;
+
     @PersistenceContext
     private EntityManager em;
 
     @Inject
     private Security security;
 
-    @Inject
-    protected MinioService minioService;
-
-    @Transactional(rollbackOn = Exception.class)
-    protected int processImport(InputStream fileInputStream, TypeReference<List<T>> typeReference) throws Exception {
+    protected int processImport(InputStream fileInputStream, TypeReference<List<T>> typeReference) {
         List<T> entities;
         try {
             var baos = new ByteArrayOutputStream();
@@ -79,16 +77,13 @@ public abstract class ImportService<T extends BaseEntity> {
             } catch (Exception ignored) {
             }
             MessageManager.error("Failed to import objects", e.getMessage());
-            throw new Exception("Failed to import objects");  // to rollback db changes
-            // return -1;
+            return -1;
         }
     }
 
-    @Transactional(rollbackOn = Exception.class)
     public abstract int processImport(InputStream fileInputStream);
 
-    @Transactional(rollbackOn = Exception.class)
-    public abstract int validateAndImport(List<T> entities);
+    public abstract int validateAndImport(List<T> entities) throws Exception;
 
     public InputStream getImportHistoryFile(EntitiesImportHistory<T> history) {
         try {

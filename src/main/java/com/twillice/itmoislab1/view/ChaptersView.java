@@ -55,7 +55,11 @@ public class ChaptersView implements Serializable {
     }
 
     public void refreshData() {
-        chapters = chapterService.findAll();
+        try {
+            chapters = chapterService.findAll();
+        } catch (Exception e) {
+            MessageManager.error("Failed to load actual data!", "Lost connection to DB");
+        }
     }
 
     public void openNew() {

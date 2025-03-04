@@ -11,20 +11,21 @@ import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
-import jakarta.validation.Validation;
-import jakarta.validation.Validator;
 
 import java.io.InputStream;
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Stateless
 public class SpaceMarineService extends ImportService<SpaceMarine> {
     @PersistenceContext
     private EntityManager em;
+
     @Inject
     private Security security;
+
+    @Inject
+    private TransactionalImportService transactionalImportService;
     @Inject
     private ChapterService chapterService;
 
@@ -91,47 +92,22 @@ public class SpaceMarineService extends ImportService<SpaceMarine> {
         MessageManager.info("Space marine removed.", null);
     }
 
-    @Transactional(rollbackOn = Exception.class)
+    @Override
     public int processImport(InputStream fileInputStream) {
-        try {
-            return processImport(fileInputStream, new TypeReference<>() {});
-        } catch (Exception e) {
-            return -1;
-        }
+        return processImport(fileInputStream, new TypeReference<>() {});
     }
 
-    @Transactional(rollbackOn = Exception.class)
-    public int validateAndImport(List<SpaceMarine> spaceMarines) {
-        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-        for (SpaceMarine spaceMarine : spaceMarines) {
-            var violations = validator.validate(spaceMarine);
-            if (!violations.isEmpty()) {
-                StringBuilder errors = new StringBuilder("Validation errors for space marine with name \"" + spaceMarine.getName() + "\": ");
-                for (var violation : violations)
-                    errors.append(violation.getMessage()).append("; "); //.append(violation.getPropertyPath())
-                MessageManager.error("Validation of some space marines failed", errors.toString());
-                return 0;
-            }
-        }
-
-        var chapters = spaceMarines.stream().map(SpaceMarine::getChapter).distinct().collect(Collectors.toList());
-        int chaptersImportedCount = chapterService.validateAndImport(chapters);
-        if (chaptersImportedCount == 0)
-            return 0;
-
-        for (var spaceMarine : spaceMarines) {
-            spaceMarine.setCreatedBy(security.getUser());
-            spaceMarine.setCreatedTime(ZonedDateTime.now());
-            em.persist(spaceMarine);
-        }
-
-        return spaceMarines.size();
+    @Override
+    public int validateAndImport(List<SpaceMarine> spaceMarines) throws Exception {
+        return transactionalImportService.validateAndImportSpaceMarines(spaceMarines);
     }
 
+    @Override
     protected Long addImportHistory(int importedCount, String fileName) {
         return addImportHistory(new SpaceMarinesImportHistory(), importedCount, fileName);
     }
 
+    @Override
     public List<SpaceMarinesImportHistory> getImportHistory() {
         return em.createQuery("from SpaceMarinesImportHistory", SpaceMarinesImportHistory.class).getResultList();
     }

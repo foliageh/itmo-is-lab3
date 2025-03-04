@@ -1,0 +1,28 @@
+<ui:composition template="/WEB-INF/templates/layout.xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <ui:param name="title" value="Weather"/>
+    <ui:define name="content">
+        <div class="card">
+            <h:form>
+                <p:dataScroller value="#{weatherView.weatherInCities}" var="weather" chunkSize="#{weatherView.chunkSize}">
+                    <f:facet name="header">
+                        Weather now in different cities
+                    </f:facet>
+                    <p:card styleClass="mb-2 w-20rem">
+                        <f:facet name="title">
+                            #{weather.city}
+                        </f:facet>
+                        #{weather.description}
+                        <br/><br/>
+                        Temperature: #{weather.temperature}
+                        <br/>
+                        Wind: #{weather.wind}
+                    </p:card>
+                </p:dataScroller>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

@@ -6,27 +6,25 @@ import com.twillice.itmoislab1.model.ChaptersImportHistory;
 import com.twillice.itmoislab1.security.Security;
 import com.twillice.itmoislab1.util.MessageManager;
 import jakarta.ejb.Stateless;
-import jakarta.ejb.TransactionManagement;
-import jakarta.ejb.TransactionManagementType;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
-import jakarta.validation.Validation;
-import jakarta.validation.Validator;
 
 import java.io.InputStream;
 import java.time.ZonedDateTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Stateless
 public class ChapterService extends ImportService<Chapter> {
     @PersistenceContext
     private EntityManager em;
+
     @Inject
     private Security security;
+
+    @Inject
+    private TransactionalImportService transactionalImportService;
 
     public Chapter find(Long id) {
         return em.find(Chapter.class, id);
@@ -94,52 +92,22 @@ public class ChapterService extends ImportService<Chapter> {
         }
     }
 
-    @Transactional(rollbackOn = Exception.class)
+    @Override
     public int processImport(InputStream fileInputStream) {
-        try {
-            return processImport(fileInputStream, new TypeReference<>() {});
-        } catch (Exception e) {
-            return -1;
-        }
+        return processImport(fileInputStream, new TypeReference<>() {});
     }
 
-    @Transactional(rollbackOn = Exception.class)
-    public int validateAndImport(List<Chapter> chapters) {
-        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-        for (Chapter chapter : chapters) {
-            var violations = validator.validate(chapter);
-            if (!violations.isEmpty()) {
-                StringBuilder errors = new StringBuilder("Validation errors for chapter with name \"" + chapter.getName() + "\": ");
-                for (var violation : violations)
-                    errors.append(violation.getMessage()).append("; "); //.append(violation.getPropertyPath())
-                MessageManager.error("Validation of some chapters failed", errors.toString());
-                return 0;
-            }
-        }
-
-        Map<String, Chapter> uniqueChapters = new HashMap<>();  // Chapter.name : Chapter
-        for (Chapter chapter : chapters) {
-            Chapter chapterWithSameName = uniqueChapters.put(chapter.getName(), chapter);
-            if (chapterWithSameName != null && !chapterWithSameName.equalsByFields(chapter) || findByName(chapter.getName()) != null) {
-                MessageManager.error("Some added chapters are not unique",
-                        "Chapter with name \"" + chapter.getName() + "\" is not unique");
-                return 0;
-            }
-        }
-
-        for (var chapter : chapters) {
-            chapter.setCreatedBy(security.getUser());
-            chapter.setCreatedTime(ZonedDateTime.now());
-            em.persist(chapter);
-        }
-
-        return chapters.size();
+    @Override
+    public int validateAndImport(List<Chapter> chapters) throws Exception {
+        return transactionalImportService.validateAndImportChapters(chapters);
     }
 
+    @Override
     protected Long addImportHistory(int importedCount, String fileName) {
         return addImportHistory(new ChaptersImportHistory(), importedCount, fileName);
     }
 
+    @Override
     public List<ChaptersImportHistory> getImportHistory() {
         return em.createQuery("from ChaptersImportHistory", ChaptersImportHistory.class).getResultList();
     }
